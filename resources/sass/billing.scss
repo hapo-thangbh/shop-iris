@@ -1,0 +1,153 @@
+img {
+    max-width: 100%;
+}
+
+.custom-control-label::before {
+    width: 2rem !important;
+    height: 2rem !important;
+    left: -2.5rem !important;
+}
+
+.custom-control-label::after {
+    width: 2rem !important;
+    height: 2rem !important;
+    left: -2.5rem !important;
+}
+
+.custom-control-label {
+    margin-left: 10px !important;
+}
+
+label {
+    font-weight: 400 !important;
+}
+
+.w-45 {
+    width : 45%;
+}
+.card-visit-image {
+    height: 150px;
+    background-size: 100% 100% !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    div {
+        padding: 6px 12px;
+        background-color: black;
+        opacity: 0.5;
+        border: #FFFFFF 1px solid;
+        color: #FFFFFF;
+        display: none;
+        i {
+            color: #ffffff;
+        }
+        .input-card {
+            width: 137px;
+            height: 38px;
+        }
+    }
+}
+
+.card-visit-image:hover {
+    div {
+        display: flex;
+        cursor: pointer;
+        transition: 1s;
+    }
+    .input-card {
+        cursor: pointer;
+    }
+}
+
+.btn-top {
+    width: 199.44px;
+}
+
+.btn-more-right {
+    top: 20px;
+    right: 20px;
+    width: 86.08px;
+}
+
+.btn-right {
+    width: 86.08px;
+}
+
+.btn-hidden-right {
+    top: 20px;
+    right: 20px;
+    width: 86.08px;
+}
+
+.button-right-more {
+    top: 30%;
+    right: -100px;
+}
+
+.button-right-plus {
+    right: 10px;
+}
+
+.button-right-minus {
+    right: -100px;
+    top: 0;
+}
+
+.form-group {
+    p {
+        padding: 7px 15px;
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+
+    i {
+        top: 10px;
+        font-size: 5px;
+        color: red;
+    }
+}
+
+.select2-container {
+    .select2-selection--single {
+        .select2-selection__rendered {
+            margin-top: 0;
+        }
+    }
+}
+
+.select2-container--default {
+    .select2-selection--single {
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+}
+
+.select2-container {
+    width: 100% !important;
+    .select2-selection--single {
+        height: 38px;
+    }
+}
+
+.red-color {
+    color: red;
+}
+
+.break-line {
+    width: 250px;
+    word-wrap: break-word;
+}
+
+.break-line-alert {
+    width: 200px;
+    word-wrap: break-word;
+}
+
+.header-create-user {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.contact-information {
+    max-height: 500px;
+    height: auto;
+}

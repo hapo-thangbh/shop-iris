@@ -1,0 +1,16 @@
+<?php
+
+return [
+    'errors' => [
+        'login' => 'Sai tài khoản, mật khẩu',
+        'active' => 'Tài khoản đang bị khóa hoặc chưa được active',
+        'disable' => 'Thay đổi thất bại',
+    ],
+
+    'success' => [
+        'update' => 'Thay đổi thành công',
+        'create' => 'Tạo mới thành công',
+        'active' => 'Mở khóa tài khoản thành công',
+        'disable' => 'Khóa tài khoản thành công',
+    ],
+];
