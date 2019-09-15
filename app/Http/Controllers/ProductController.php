@@ -37,6 +37,15 @@ class ProductController extends Controller
             $data['image'] = $fileName1;
         }
         Product::findOrFail($id)->update($data);
+
+
+        $products = Product::findOrFail($id)->productSuppliers;
+        foreach ($products as $i => $product) {
+            $product->type->update([
+                'code' => $request->attribute[$i]
+            ]);
+        }
+
         return redirect()->route('report.warehouse');
     }
 
@@ -230,7 +239,6 @@ class ProductController extends Controller
     public function warehouse(Request $request)
     {
         $products = Product::search($request)->paginate(Product::PAGINATE);
-
         $respon = [
             'titlePage' => 'Kho hàng',
             'categories' => Category::all(),

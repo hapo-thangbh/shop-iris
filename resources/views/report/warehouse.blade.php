@@ -202,7 +202,12 @@
                                 <input required type="number" min="0" class="form-control" id="" name="export_prince">
                             </div>
                         </div>
-
+                        <div class="form-group row">
+                            <label for="" class="col-sm-3 col-form-label">Các thuộc tính</label>
+                            <div class="col-sm-9" id="attribute">
+                                
+                            </div>
+                        </div>
                 </div>
 
                 <!-- Modal footer -->
@@ -226,6 +231,7 @@
             $('input[name=code]').val(product.code);
             $('input[name=name]').val(product.name);
 
+            // danh mục
             var option = '';
             for (var i = 0; i < categories.length; i++) {
                 option += `
@@ -239,6 +245,16 @@
             `;
             $(`#category`).html(text);
             $(`option[data-id=${product.category_id}]`).attr('selected', 'selected');
+
+            // thuộc tính
+            var attribute = '';
+            var product_suppliers = product.product_suppliers;
+            for (var i = 0; i < product_suppliers.length; i++) {
+                attribute += `
+                    <input required type="text" class="form-control mb-2" name="attribute[]" value="${product_suppliers[i].type.code}">
+                `;
+            }
+            $(`#attribute`).html(attribute);
 
 
             $('#edit').modal('show');
