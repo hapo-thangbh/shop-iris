@@ -107,7 +107,7 @@
                                 @endif
                             </td>
                             @if(auth()->user()->level == 1)
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }})">Sửa</button></td>
+                            <td rowspan="{{ $product->productSuppliers->count() }}" class="align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }})">Sửa</button></td>
                             @endif
                         </tr>
                         <?php $check = 0 ?>
@@ -165,8 +165,8 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group row">
-                            <label for="" class="col-sm-2 col-form-label">Ảnh</label>
-                            <div class="col-sm-10">
+                            <label for="" class="col-sm-3 col-form-label">Ảnh</label>
+                            <div class="col-sm-9">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="validatedCustomFile" name="image">
                                     <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
@@ -174,26 +174,31 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="" class="col-sm-2 col-form-label">Mã</label>
-                            <div class="col-sm-10">
+                            <label for="" class="col-sm-3 col-form-label">Mã</label>
+                            <div class="col-sm-9">
                                 <input required type="text" class="form-control" id="" name="code">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="" class="col-sm-2 col-form-label">Tên SP</label>
-                            <div class="col-sm-10">
+                            <label for="" class="col-sm-3 col-form-label">Tên SP</label>
+                            <div class="col-sm-9">
                                 <input required type="text" class="form-control" id="" name="name">
                             </div>
                         </div>
+                         <div class="form-group row">
+                            <label for="" class="col-sm-3 col-form-label">Danh mục</label>
+                            <div class="col-sm-9" id="category">
+                            </div>
+                        </div>
                         <div class="form-group row">
-                            <label for="" class="col-sm-2 col-form-label">Giá vốn</label>
-                            <div class="col-sm-10">
+                            <label for="" class="col-sm-3 col-form-label">Giá vốn</label>
+                            <div class="col-sm-9">
                                 <input required type="text" class="form-control" id="" name="import_prince">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="" class="col-sm-2 col-form-label">Giá bán</label>
-                            <div class="col-sm-10">
+                            <label for="" class="col-sm-3 col-form-label">Giá bán</label>
+                            <div class="col-sm-9">
                                 <input required type="number" min="0" class="form-control" id="" name="export_prince">
                             </div>
                         </div>
@@ -213,13 +218,29 @@
 
 @section('script')
     <script>
-        function editProduct(product) {
+        function editProduct(product, categories) {
             console.log(product);
             $('#formUpdate').attr('action', `/product/update/${product.id}`);
             $('input[name=import_prince]').val(product.import_prince);
             $('input[name=export_prince]').val(product.export_prince);
             $('input[name=code]').val(product.code);
             $('input[name=name]').val(product.name);
+
+            var option = '';
+            for (var i = 0; i < categories.length; i++) {
+                option += `
+                    <option data-id="${categories[i].id}" value="${categories[i].id}">${categories[i].name}</option>
+                `;
+            }
+            var text = `
+                <select class="form-control" name="category_id">`+
+                    option
+                +`</select>
+            `;
+            $(`#category`).html(text);
+            $(`option[data-id=${product.category_id}]`).attr('selected', 'selected');
+
+
             $('#edit').modal('show');
         }
     </script>

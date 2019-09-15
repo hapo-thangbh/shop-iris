@@ -25,8 +25,8 @@ class OrderController extends Controller
      */
     public function report(Request $request)
     {
-            $orders = Order::with('orderProducts.product', 'customer.district.province', 'type', 'orderProducts.type', 'orderSource')
-            ->orderByDesc('created_at');
+        $orders = Order::with('orderProducts.product', 'customer.district.province', 'type', 'orderProducts.type', 'orderSource')
+            ->orderByDesc('updated_at');
 
         if (!$request->search) {
             $orders->where('status_id', 1);

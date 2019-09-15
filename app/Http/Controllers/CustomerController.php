@@ -22,7 +22,7 @@ class CustomerController extends Controller
 
     public function report(Request $request)
     {
-        $customers = Customer::with('type', 'orders');
+        $customers = Customer::with('type', 'orders')->orderByDesc('created_at');
         if ($request->phone) {
             $customers->where('phone', 'LIKE', '%' . $request->phone . '%');
         }

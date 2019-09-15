@@ -17,7 +17,8 @@
             <div class="row mt-5">
                 <div class="col-auto">Nhà cung cấp: </div>
                 <div class="col-2">
-                    <select class="form-control" id="" name="supplier_id">
+                    <select class="form-control select2" id="" name="supplier_id">
+                        <option value=""></option>
                         @foreach ($suppliers as $supplier)
                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                         @endforeach
@@ -25,7 +26,8 @@
                 </div>
                 <div class="col-auto">Tình trạng: </div>
                 <div class="col-2">
-                    <select class="form-control" id="" name="status_id">
+                    <select class="form-control select2" id="" name="status_id">
+                        <option value=""></option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status->id }}">{{ $status->name }}</option>
                         @endforeach
@@ -50,7 +52,8 @@
                         <tr>
                             <td class="text-center font-weight-bold">1</td>
                             <td>
-                                <select class="form-control" id="" name="product[0][code]" onchange="setProduct(0)">
+                                <select class="form-control select2" id="" name="product[0][code]" onchange="setProduct(0)">
+                                    <option value=""></option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product }}">{{ $product->code }}</option>
                                     @endforeach
@@ -81,7 +84,9 @@
                             <td colspan="6"></td>
                         </tr>
                         <tr>
-                            <th colspan="6" class="text-center">Tổng cộng</th>
+                            <th colspan="4" class="text-center">Tổng cộng</th>
+                            <td class="text-center" id="amount"></td>
+                            <td class="text-center"></td>
                             <td class="text-center" id="total"></td>
                         </tr>
                     </table>
@@ -174,11 +179,14 @@
     function setTotal(count) {
         // Tổng cộng
         let total = 0;
+        let amount = 0;
         for (let i = 0; i <= count; i++) {
             let price = $(`input[name="product[${i}][number]"]`).val() * $(`input[name="product[${i}][price]"]`).val();
             total += price;
+            amount += Number($(`input[name="product[${i}][number]"]`).val());
         }
         $('#total').text(total);
+        $('#amount').text(amount);
     }
 </script>
 @endsection

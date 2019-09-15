@@ -176,7 +176,7 @@ class ProductController extends Controller
 
     public function import(Request $request)
     {
-        $products = ProductSupplier::with('supplier', 'product');
+        $products = ProductSupplier::with('supplier', 'product')->orderByDesc('created_at');
         if($request->code) {
             $code = $request->code;
             $products->whereHas('product', function ($query) use ($code){
@@ -195,19 +195,10 @@ class ProductController extends Controller
             $products->where('created_at', '<=', $endDate);
         }
         
-        $total = 0;
-
-        foreach ($products->get() as $product) {
-            $into_money = $product->number * $product->price;
-            $total += $into_money;
-        }
-
-
         $data = [
             'titlePage' => 'Thống Kê Nhập Hàng',
             'suppliers' => Supplier::all(),
             'product_suppliers' => $products->paginate(ProductSupplier::PAGINATE),
-            'total' => $total,
             'request' => $request,
         ];
         return view('product.import', $data);
