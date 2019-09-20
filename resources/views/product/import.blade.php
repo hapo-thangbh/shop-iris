@@ -70,8 +70,10 @@
                     </tr>
                     @endforeach
                     <tr>
-                        <th colspan="7" class="text-center">Tổng cộng</th>
-                        <td class="text-center" id="total">{{ $total }}</td>
+                        <th colspan="5" class="text-center">Tổng cộng</th>
+                        <td class="text-center" id="amount"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center" id="total"></td>
                     </tr>
                 </table>
                 {{ $product_suppliers
@@ -91,11 +93,14 @@
 <script type="text/javascript">
     $(document).ready(function() {
         let total = 0;
+        let amount = 0;
         for (let i = 2; i <= <?= $stt ?>; i++) {
             $(`#totalMoney${i}`).text($(`#number${i}`).text() * $(`#price${i}`).text());
             total += Number($(`#totalMoney${i}`).text());
+            amount += Number($(`#number${i}`).text());
         }
         $('#total').text(total);
+        $('#amount').text(amount);
     });
 </script>
 @endsection

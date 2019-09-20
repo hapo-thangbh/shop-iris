@@ -35,7 +35,7 @@ class Customer extends Model
     {
         $total = 0;
         foreach ($this->orders as $order) {
-            $total += $order->total;
+            $total += $order->total - $order->discount;
         }
         return $total;
     }
