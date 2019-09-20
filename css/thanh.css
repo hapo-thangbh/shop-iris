@@ -51,8 +51,8 @@ select {
 	background: #fff;
 }
 .select2-container--default .select2-selection--single {
-    background: none!important; 
-    border: none!important; 
+    background: none!important;
+    border: none!important;
     border-radius: 4px;
     height: 21px!important;
 }
@@ -72,4 +72,8 @@ span.select2.select2-container.select2-container--default{
 
 .border-danger {
     border-color: #3fb079 !important;
+}
+
+html, body, .wrapper {
+    overflow-x: inherit;
 }

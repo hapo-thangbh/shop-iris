@@ -67,4 +67,9 @@ class ProductSupplier extends Model
             ->where('type_id', $this->type_id)
             ->sum('number');
     }
+
+    public function getTypeNameAttribute()
+    {
+        return $this->type->name;
+    }
 }
