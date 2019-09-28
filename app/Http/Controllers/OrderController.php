@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\District;
 use App\Order;
 use App\OrderProduct;
@@ -45,6 +46,16 @@ class OrderController extends Controller
             $orders = $orders->whereHas('customer', function ($query) use ($phone){
                 $query->where('phone', 'LIKE', '%' . $phone . '%');
             });
+        }
+        if ($request->code) {
+            $code = $request->code;
+            $orders->where('id', $code)
+            ->orwhereHas('customer', function ($query) use ($code){
+                $query->where('name', 'LIKE', '%' . $code . '%');
+            })->orwhereHas('orderSource', function ($query) use ($code){
+                $query->where('name', 'LIKE', '%' . $code . '%');
+            })
+            ;
         }
         if ($request->start_date) {
             $orders->where('created_at', '>=', $request->start_date);

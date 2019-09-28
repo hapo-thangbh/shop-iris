@@ -8,7 +8,8 @@
         </div>
         <form class="row" action="{{ route('report.order') }}" method="GET">
             <div class="form-inline">
-                <input type="text" class="form-control mx-1" placeholder="Số điện thoại" name="phone" value="{{ $request->phone }}">
+                <input type="text" class="form-control mx-1" placeholder="Mã đơn, tên khách, nguồn đơn" name="code" value="{{ $request->code }}">
+                <input type="text" class="form-control mx-1" placeholder="Số điện thoại" name="phone" value="{{ $request->phone }}">
                 <div class="mx-1 my-1">
                     <select class="form-control select2" name="status_id">
                         <option value="">Trạng thái (tất cả)</option>
@@ -83,11 +84,19 @@
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-shopping-basket" aria-hidden="true"></i>
-                            <span>{{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }} <span>({{ $order->orderProducts[0]->number }});</span></span>
+                            <span class="attribute-product">
+                                {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }} 
+                                ({{ $order->orderProducts[0]->number }});
+                                <img src="{{ asset('storage/'.$order->orderProducts[0]->product->image) }}">
+                            </span>
 
                             <?php $check = 0 ?>
                             @foreach($order->orderProducts as $orderProduct)
-                                @if($check){{ $orderProduct->product->code.$orderProduct->type->code }} ({{ number_format($orderProduct->number) }});
+                                @if($check)
+                                    <span class="attribute-product">{{ $orderProduct->product->code.$orderProduct->type->code }} 
+                                        ({{ number_format($orderProduct->number) }});
+                                        <img src="{{ asset('storage/'.$orderProduct->product->image) }}">
+                                    </span>
                                 @endif
                                 <?php $check++ ?>
                             @endforeach

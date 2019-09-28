@@ -28,6 +28,7 @@ class ProductController extends Controller
     public function update($id, Request $request)
     {
         $data = $request->all();
+        $product = Product::findOrFail($id);
         if ($request->image) {
             $file1Extension = $request->image
                 ->getClientOriginalExtension();
@@ -36,14 +37,33 @@ class ProductController extends Controller
                 ->storeAs('public', $fileName1);
             $data['image'] = $fileName1;
         }
-        Product::findOrFail($id)->update($data);
+        $product->update($data);
 
-
-        $products = Product::findOrFail($id)->productSuppliers;
-        foreach ($products as $i => $product) {
-            $product->type->update([
-                'code' => $request->attribute[$i]
+        $product_suppliers = $product->productSuppliers;
+        foreach ($product_suppliers as $i => $product1) {
+            $product1->type->update([
+                'code' => $request->attribute_code[$i],
+                'name' => $request->attribute_name[$i],
+                'level' => 1
             ]);
+        }
+        $j = $product_suppliers->count();
+        $amount_create = count($request->attribute_code) - $j;
+        for ($i=0; $i < $amount_create; $i++) { 
+            $type = Type::create([
+                'code' => $request->attribute_code[$j],
+                'name' => $request->attribute_name[$j],
+                'level' => 1
+            ]);
+            ProductSupplier::create([
+                'supplier_id' => $product_suppliers->first()->supplier_id,
+                'product_id' => $product->id,
+                'number' => 1,
+                'price' => $product->import_prince,
+                'status_id' => 6,
+                'type_id' => $type->id,
+            ]);
+            $j++;
         }
 
         return redirect()->route('report.warehouse');
