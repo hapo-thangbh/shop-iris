@@ -6,9 +6,10 @@
         <div class="row mt-1">
             <a class="ml-1 col-md-2 btn btn-danger" href="{{ route('product.export') }}">+ Bán hàng</a>
         </div>
-        <form class="row" action="{{ route('report.order') }}" method="GET">
+        <form class="row" action="{{ route('report.order') }}" method="GET" id="form-search-order">
             <div class="form-inline">
-                <input type="text" class="form-control mx-1" placeholder="Số điện thoại" name="phone" value="{{ $request->phone }}">
+                <input type="text" class="form-control mx-1" placeholder="Mã đơn, tên khách, nguồn đơn" name="code" value="{{ $request->code }}">
+                <input type="text" class="form-control mx-1" placeholder="Số điện thoại" name="phone" value="{{ $request->phone }}">
                 <div class="mx-1 my-1">
                     <select class="form-control select2" name="status_id">
                         <option value="">Trạng thái (tất cả)</option>
@@ -79,15 +80,31 @@
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-phone" aria-hidden="true"></i>
-                            <span>{{ $order->customer->phone }}</span>
+                            <span onclick="clickPhone($(this).text());" class="order-phone
+                                @if(!empty($array_customer_id))
+                                    @foreach($array_customer_id as $customer_id)
+                                        @if($order->customer_id == $customer_id)
+                                            text-success
+                                        @endif
+                                    @endforeach
+                                @endif
+                            ">{{ $order->customer->phone }}</span>
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-shopping-basket" aria-hidden="true"></i>
-                            <span>{{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }} <span>({{ $order->orderProducts[0]->number }});</span></span>
+                            <span class="attribute-product">
+                                {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }} 
+                                ({{ $order->orderProducts[0]->number }});
+                                <img src="{{ asset('storage/'.$order->orderProducts[0]->product->image) }}">
+                            </span>
 
                             <?php $check = 0 ?>
                             @foreach($order->orderProducts as $orderProduct)
-                                @if($check){{ $orderProduct->product->code.$orderProduct->type->code }} ({{ number_format($orderProduct->number) }});
+                                @if($check)
+                                    <span class="attribute-product">{{ $orderProduct->product->code.$orderProduct->type->code }} 
+                                        ({{ number_format($orderProduct->number) }});
+                                        <img src="{{ asset('storage/'.$orderProduct->product->image) }}">
+                                    </span>
                                 @endif
                                 <?php $check++ ?>
                             @endforeach
@@ -200,6 +217,17 @@
 @endsection
 @section('script')
     <script>
+        function clickPhone(phone) {
+            var string = window.location.toString();
+            if(string.indexOf("?") == -1) {
+                window.location.href = location + '?phone=' + phone;
+            }
+            else {
+                window.location.href = location + '&phone=' + phone;
+            }
+        }
+
+
         let stt = 0;
         function setEditAddress(stt, id) {
             $('#getEditAddress').val($(`#address${stt}`).text());

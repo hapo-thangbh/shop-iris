@@ -74,6 +74,20 @@ span.select2.select2-container.select2-container--default{
     border-color: #3fb079 !important;
 }
 
+.attribute-product img{
+    display: none;
+}
+.attribute-product:hover img{
+    display: block;
+    position: absolute;
+    left: 351px;
+    z-index: 1;
+}
+.order-phone{
+    cursor: pointer;
+}
+
 html, body, .wrapper {
     overflow-x: inherit;
 }
+

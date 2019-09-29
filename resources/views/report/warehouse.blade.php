@@ -151,7 +151,7 @@
     <!-- </div> -->
     <!-- The Modal -->
     <div class="modal fade" id="edit">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
 
                 <!-- Modal Header -->
@@ -204,8 +204,21 @@
                         </div>
                         <div class="form-group row">
                             <label for="" class="col-sm-3 col-form-label">Các thuộc tính</label>
-                            <div class="col-sm-9" id="attribute">
-                                
+                            <div class="col-sm-9">{{-- id="attribute" --}}
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>Thuộc tính</td>
+                                        <td>Tên thuộc tính</td>
+                                    </tr>
+                                    <tbody id="attribute">
+                                        
+                                    </tbody>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <button type="button" class="btn btn-danger" onclick="addOrder()">+</button>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                 </div>
@@ -251,13 +264,38 @@
             var product_suppliers = product.product_suppliers;
             for (var i = 0; i < product_suppliers.length; i++) {
                 attribute += `
-                    <input required type="text" class="form-control mb-2" name="attribute[]" value="${product_suppliers[i].type.code}">
+                    <tr>
+                        <td>
+                            <input required type="text" class="form-control mb-2" name="attribute_code[]" value="${product_suppliers[i].type.code}">
+                        </td>
+                        <td>
+                            <input required type="text" class="form-control mb-2" name="attribute_name[]" value="${product_suppliers[i].type.name}">
+                        </td>
+                    </tr>
                 `;
             }
             $(`#attribute`).html(attribute);
 
 
             $('#edit').modal('show');
+        }
+        let stt = 0;
+        function addOrder() {
+            stt++;
+            let text = `
+                <tr>
+                    <td>
+                        <input required type="text" class="form-control mb-2" name="attribute_code[]" value="">
+                    </td>
+                    <td>
+                        <input required type="text" class="form-control mb-2" name="attribute_name[]" value="">
+                    </td>
+                </tr>
+            `;
+            $('#attribute').append(text);
+            // setProduct(stt);
+            // $(".select2").select2({ 
+            // });
         }
     </script>
 @endsection

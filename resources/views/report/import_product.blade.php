@@ -49,20 +49,22 @@
                             <th>Giá nhận</th>
                             <th>Thành tiền</th>
                         </tr>
+                        <tbody id="add-row">
                         <tr>
                             <td class="text-center font-weight-bold">1</td>
                             <td>
-                                <select class="form-control select2" id="" name="product[0][code]" onchange="setProduct(0)">
+                                <select class="form-control select2" id="" name="product[0][code]" onchange="setProduct(0); setType(0);">
                                     <option value=""></option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product }}">{{ $product->code }}</option>
                                     @endforeach
                                 </select>
                             </td>
-                            <td>
-                                <select class="form-control" id="" name="product[0][type]" onchange="setProduct(0)">
-                                    @foreach ($types as $type)
-                                        <option value="{{ $type->name }}">{{ $type->name }}</option>
+                            <td id="selectType0">
+                                <select class="form-control select2" id="" name="product[0][type]" id="type" onchange="setProduct(0)">
+                                    <option value=""></option>
+                                    @foreach ($productSuppliers as $productSupplier)
+                                        <option value="{{ $productSupplier->name }}">{{ $productSupplier->name }}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -75,7 +77,6 @@
                             </td>
                             <td class="text-center" id="totalMoney0"></td>
                         </tr>
-                        <tbody id="add-row">
                         </tbody>
                         <tr>
                             <td class="text-center">
@@ -104,8 +105,10 @@
 
 @section('script')
 <script type="text/javascript">
+    
+
     let product = JSON.parse('<?= json_encode($products) ?>');
-    let type = JSON.parse('<?= json_encode($types) ?>');
+    let type = JSON.parse('<?= json_encode($productSuppliers) ?>');
     let stt = 0;
     let count = 0;
     $(document).ready(function() {
@@ -130,16 +133,18 @@
             <tr>
                 <td class="text-center font-weight-bold">${stt + 1}</td>
                 <td>
-                    <select class="form-control" id="" name="product[${stt}][code]" onchange="setProduct(${stt})">
+                    <select class="form-control" id="" name="product[${stt}][code]" onchange="setProduct(${stt}); setType(${stt});">
+                        <option value=""></option>
                         @foreach ($products as $product)
                             <option value="{{ $product }}">{{ $product->code }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td>
+                <td id="selectType${stt}">
                     <select class="form-control" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
-                        @foreach ($types as $type)
-                            <option value="{{ $type->name }}">{{ $type->name }}</option>
+                        <option value=""></option>
+                        @foreach ($productSuppliers as $productSupplier)
+                            <option value="{{ $productSupplier->name }}">{{ $productSupplier->name }}</option>
                         @endforeach
                     </select>
                 </td>
@@ -153,14 +158,40 @@
                 <td class="text-center" id="totalMoney${stt}"></td>
             </tr>`
 
-        $('.add-row').closest('table').children('#add-row').append(content);
+        $('#add-row').append(content);
         count++;
         setProduct(stt);
-        console.log(count);
+        $(".select2").select2({ 
+            });
+    }
+
+    function setType(id) {
+        let $code = $(`select[name="product[${id}][code]"]`).val();
+        if($code) {
+           $.ajax({
+               url: "{{ route('product.get_type') }}",
+               method: 'GET',
+               data: {
+                   stt: id,
+                   id: JSON.parse($code).id,
+               },
+               success: function (respon) {
+                   $(`#selectType${id}`).html(respon);
+                   $(".select2").select2({
+                   });
+                   setProduct(id);
+               }
+           })
+        }
     }
 
     function setProduct(stt) {
-        $(`#nameProduct${stt}`).text(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).name + ' ' + $(`select[name="product[${stt}][type]"]`).val());
+        if($(`select[name="product[${stt}][type]"]`).val()){
+            $(`#nameProduct${stt}`).text(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).name + ' ' + JSON.parse($(`select[name="product[${stt}][type]"]`).val()).name);
+        }
+
+
+
         setPrice(stt);
         setTotalMoney(stt);
     }
