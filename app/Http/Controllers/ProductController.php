@@ -245,8 +245,8 @@ class ProductController extends Controller
         $suppliers = Supplier::all();
         $statuses = Status::where('type', 1)->get();
         $products = Product::all();
-        $types = Type::where('level', 1)->get();
-        return view('report.import_product',compact('titlePage', 'suppliers', 'statuses', 'products', 'types'));
+        $productSuppliers = Type::where('level', 1)->get();
+        return view('report.import_product',compact('titlePage', 'suppliers', 'statuses', 'products', 'productSuppliers'));
     }
 
     /**
