@@ -26,15 +26,28 @@ class OrderController extends Controller
      */
     public function report(Request $request)
     {
+        $array_customer_id = [];
         $orders = Order::with('orderProducts.product', 'customer.district.province', 'type', 'orderProducts.type', 'orderSource')
             ->orderByDesc('updated_at');
 
         if (!$request->search) {
             $orders->where('status_id', 1);
+            $order_customer = Order::select(DB::raw('*','count(customer_id) as amount'))->groupBy('customer_id')->get();
+            foreach ($order_customer as $value) {
+                if($value->amount > 1) {
+                    array_push($array_customer_id, $value->customer_id);
+                }
+            }
         }
 
         if ($request->status_id) {
             $orders->where('status_id', $request->status_id);
+            $order_customer = Order::where('status_id', $request->status_id)->select('*', DB::raw('count(customer_id) as amount'))->groupBy('customer_id')->get();
+            foreach ($order_customer as $value) {
+                if($value->amount > 1) {
+                    array_push($array_customer_id, $value->customer_id);
+                }
+            }
         }
 
         if ($request->phone) {
@@ -83,6 +96,8 @@ class OrderController extends Controller
             'request' => $request,
             'typeProducts' => Type::where('level', Type::PRODUCT)->get(),
             'products' => Product::all(),
+            'products' => Product::all(),
+            'array_customer_id' => $array_customer_id,
         ];
         return view('report.order', $data);
     }
