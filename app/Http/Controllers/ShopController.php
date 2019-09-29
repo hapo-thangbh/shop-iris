@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateShopRequest;
 use App\Order;
 use App\OrderProduct;
+use App\OrderSource;
 use App\Product;
 use App\ProductSupplier;
 use App\Shop;
@@ -133,12 +134,45 @@ class ShopController extends Controller
         return view('table_store_info', $respon)->render();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Shop  $shop
-     * @return \Illuminate\Http\Response
-     */
+    public function reportAjax3(Request $request)
+    {
+        $waitSend = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Chờ gửi')->where('type', Status::ORDER);
+        });
+        $send = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Đã gửi')->where('type', Status::ORDER);
+        });
+        $successSend = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Hoàn thành')->where('type', Status::ORDER);
+        });
+        $fail = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Hoàn')->where('type', Status::ORDER);
+        })->where('created_at', '>=', date('Y-m-01'));
+        if ($request->start_date) {
+            $waitSend->where('created_at', '>=', $request->start_date);
+            $send->where('created_at', '>=', $request->start_date);
+            $successSend->where('created_at', '>=', $request->start_date);
+            $fail->where('created_at', '>=', $request->start_date);
+        }
+        if ($request->end_date) {
+            $time = Carbon::parse($request->end_date)->addDays(1);
+            $waitSend->where('created_at', '<=', $time);
+            $send->where('created_at', '<=', $time);
+            $successSend->where('created_at', '<=', $time);
+            $fail->where('created_at', '<=', $time);
+        }
+        $respon = [
+            'reportOrderSources' => [
+                'orderSources' => OrderSource::with('orders.status')->get(),
+                'waitSend' => $waitSend->get(),
+                'send' => $send->get(),
+                'successSend' => $successSend->get(),
+                'fail' => $fail->get(),
+            ]
+        ];
+        return view('table_store_info_3', $respon)->render();
+    }
+
     public function show(Shop $shop)
     {
         //

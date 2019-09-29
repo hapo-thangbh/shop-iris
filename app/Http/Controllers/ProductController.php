@@ -125,9 +125,20 @@ class ProductController extends Controller
 
     public function export()
     {
+        $defaultInfo = Customer::firstOrCreate(
+            ['phone' => '0999999999'],
+            [
+                'name' => '0999999999',
+                'address' => '0999999999',
+                'link' => '0999999999',
+                'district_id' => 1,
+                'type_id' => Type::where('level', Type::CUSTOMER)->first()->id,
+            ]
+            );
+        $provinces = Province::with('districts')->orderBy('sort_number', 'desc')->orderBy('name', 'asc')->get();
         $data = [
             'titlePage' => 'Bán Hàng',
-            'provinces' => Province::with('districts')->orderBy('name')->get(),
+            'provinces' => $provinces,
             'orderSources' => OrderSource::all(),
             'types' => Type::where('level', Type::CUSTOMER)->get(),
             'typeOrders' => Type::where('level', Type::ORDER)->get(),
@@ -135,6 +146,7 @@ class ProductController extends Controller
             'transports' => Transport::all(),
             'products' => Product::with('types', 'productSuppliers')->get(),
             'typeProducts' => Type::where('level', Type::PRODUCT)->get(),
+            'defaultInfo' => $defaultInfo
         ];
         return view('product.export', $data);
     }
@@ -223,7 +235,7 @@ class ProductController extends Controller
             $endDate = strftime("%Y-%m-%d", $endDate);
             $products->where('created_at', '<=', $endDate);
         }
-        
+
         $data = [
             'titlePage' => 'Thống Kê Nhập Hàng',
             'suppliers' => Supplier::all(),
@@ -282,14 +294,14 @@ class ProductController extends Controller
 
     public function searchWarehouse(Request $request)
     {
-        
+
     }
 
     public function ajaxGetType(Request $request)
     {
         $stt = $request->stt;
         $product = Product::with('productSuppliers.type')->findOrFail($request->id);
-        $productSuppliers = $product->productSuppliers()->get()->unique('type_id');
+        $productSuppliers = $product->productSuppliers->unique('type_id');
         return view('product.select_type', compact('productSuppliers', 'stt'));
     }
 }

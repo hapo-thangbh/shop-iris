@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Order;
 use App\OrderProduct;
+use App\OrderSource;
 use App\Product;
 use App\ProductSupplier;
 use App\Status;
+use App\Type;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,28 +31,41 @@ class UserController extends Controller
                 $successSend = Order::whereHas('status', function ($query) {
                     $query->where('name', 'Hoàn thành')->where('type', Status::ORDER);
                 })->where('created_at', '>=', date('Y-m-01'));
+                $fail = Order::whereHas('status', function ($query) {
+                    $query->where('name', 'Hoàn')->where('type', Status::ORDER);
+                })->where('created_at', '>=', date('Y-m-01'));
                 $respon = [
                     'titlePage' => 'Doanh thu cửa hàng',
                     'revenues' => [
                         'waitSend' => $waitSend->sum('total') + $waitSend->sum('ship_fee') - $waitSend->sum('discount'),
                         'send' => $send->sum('total') + $send->sum('ship_fee') - $send->sum('discount'),
                         'successSend' => $successSend->sum('total') + $successSend->sum('ship_fee') - $successSend->sum('discount'),
+                        'fail' => $fail->sum('total') + $fail->sum('ship_fee') - $fail->sum('discount'),
                     ],
                     'orders' => [
                         'waitSend' => $waitSend->count(),
                         'send' => $send->count(),
                         'successSend' => $successSend->count(),
+                        'fail' => $fail->count(),
                     ],
                     'importPrice' => [
                         'waitSend' => $waitSend->get()->sum('sum_import_price'),
                         'send' => $send->get()->sum('sum_import_price'),
                         'successSend' => $successSend->get()->sum('sum_import_price'),
+                        'fail' => $fail->get()->sum('sum_import_price'),
                     ],
                     'totalImport' => ProductSupplier::all()->where('created_at', '>=', date('Y-m-01'))->sum('total_import_price'),
                     'totalMoney' => Product::all()->sum('total_money'),
                     'totalNumber' =>  ProductSupplier::all()->sum('number') - OrderProduct::whereHas('order', function($query) {
                             $query ->whereIn('status_id', [2, 3, 5]);
-                        })->get()->sum('number')
+                        })->get()->sum('number'),
+                    'reportOrderSources' => [
+                        'orderSources' => OrderSource::with('orders.status')->get(),
+                        'waitSend' => $waitSend->get(),
+                        'send' => $send->get(),
+                        'successSend' => $successSend->get(),
+                        'fail' => $fail->get(),
+                    ]
                 ];
                 return view('report.store_sale', $respon);
             }

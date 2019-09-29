@@ -107,6 +107,7 @@ Route::prefix('')->middleware('auth')->group(function () {
         Route::get('store-sale','ShopController@report')->name('store_sale');
         Route::get('store-sale-ajax','ShopController@reportAjax')->name('store_sale_ajax');
         Route::get('store-sale-ajax2','ShopController@reportAjax2')->name('store_sale_ajax2');
+        Route::get('store-sale-ajax_3','ShopController@reportAjax3')->name('store_sale_ajax_3');
         Route::get('warehouse','ProductController@warehouse')->name('warehouse');
         Route::get('import-product','ProductController@reportImport')->name('import_product');
         Route::get('order','OrderController@report')->name('order');
