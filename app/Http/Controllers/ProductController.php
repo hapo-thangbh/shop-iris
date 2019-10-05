@@ -80,12 +80,14 @@ class ProductController extends Controller
             'titlePage' => 'Thêm sản phẩm',
             'suppliers' => Supplier::all(),
             'categories' => Category::all(),
+            'types' => Type::where('level', Type::PRODUCT)->get(),
         ];
         return view('add.product', $respon);
     }
 
     public function store(Store $request)
     {
+        // dd($request->all());
         $data = $request->all();
         if ($request->hasFile('image')) {
             $file1Extension = $request->file('image')
@@ -96,7 +98,22 @@ class ProductController extends Controller
             $data['image'] = $fileName1;
         }
         $data['user_id'] = Auth::user()->id;
-        Product::create($data);
+        $product = Product::create($data);
+
+
+        for ($i=0; $i < count($request->attr); $i++) { 
+            if($request->attr[$i] != null) {
+                $type = json_decode($request->attr[$i]);
+                ProductSupplier::create([
+                    'supplier_id' => $request->supplier_id,
+                    'product_id' => $product->id,
+                    'number' => 1,
+                    'price' => $request->import_prince,
+                    'status_id' => 1,
+                    'type_id' => $type->id,
+                ]);
+            }
+        }
         if ($request->check) {
             return redirect()->back()->with('msg', trans('messages.success.create'));
         }
