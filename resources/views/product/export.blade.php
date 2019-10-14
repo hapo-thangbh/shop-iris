@@ -6,7 +6,7 @@
             @csrf
             <div class="row justify-content-center">
                 <div class="col-12 mb-3">
-                    <h1 class="title">Thêm đơn hàng</h1>
+                    <h1 class="title">Thêm đơn hàng<a href="{{ route('product.export_for_customer', $defaultInfo->id) }}" class="float-right btn btn-danger set-info">Khách lẻ</a></h1>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                     <div class="form-group row">
@@ -246,7 +246,7 @@
                     id: id
                 },
                 success: function (respon) {
-                    let text = '';
+                    let text = '<option value="" class="d-none" disabled selected>Chọn huyện..</option>';
                     $.each( respon.districts, function( key, value ) {
                         text += `<option value="${value.id}">${value.name}</option>`;
                     });
@@ -293,7 +293,7 @@
             </tr>`;
             $('#order').append(text);
             setProduct(stt);
-            $(".select2").select2({ 
+            $(".select2").select2({
             });
         }
 
@@ -352,7 +352,7 @@
             }
             setSale();
         }
-        
+
         function setSale() {
             if ($('select[name=discount_type]').val() === '%') {
                 $('#sale').text($('#sumPrice').text() * $('input[name=discount]').val() / 100);
