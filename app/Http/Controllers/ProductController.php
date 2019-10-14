@@ -307,6 +307,7 @@ class ProductController extends Controller
         $stt = $request->stt;
         $product = Product::with('productSuppliers.type')->findOrFail($request->id);
         $productSuppliers = $product->productSuppliers()->get()->unique('type_id');
+        
         return view('product.select_type', compact('productSuppliers', 'stt'));
     }
 }

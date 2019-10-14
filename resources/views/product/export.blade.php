@@ -162,6 +162,7 @@
                             <th style="width: 100px">Số lượng</th>
                             <th>Giá bán</th>
                             <th>Thành tiền</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody id="order">
@@ -190,6 +191,7 @@
                             <td class="text-center" id="price0">
                             </td>
                             <td class="text-center" id="money0"></td>
+                            <td class="text-center"><button type="button" id="delete${stt}" class="btn-del-attr btn bg-danger" onclick="deleteOrder(${stt});">Xóa</button></td>
                         </tr>
                         </tbody>
                         <tr>
@@ -197,22 +199,27 @@
                                 <button type="button" class="btn btn-danger" onclick="addOrder()">+</button>
                             </td>
                             <td colspan="6" class="text-center text-danger"><h4>. . .</h4></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Cộng tiền hàng</th>
                             <td class="text-center" id="sumPrice">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Chiết khấu</th>
                             <td class="text-center" id="sale">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Phí vận chuyển</th>
                             <td class="text-center" id="ship">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Tổng cộng</th>
                             <td class="text-center" id="total">0</td>
+                            <td></td>
                         </tr>
                     </table>
                 </div>
@@ -251,7 +258,7 @@
             })
         }
 
-        let $products = JSON.parse('<?= json_encode($products) ?>');
+        let $products = JSON.parse(`<?= json_encode($products) ?>`);
         let $typeProducts = JSON.parse('<?= json_encode($typeProducts) ?>');
         let stt = 0;
         setProduct(stt);
@@ -282,6 +289,7 @@
                 <td class="text-center" id="price${stt}">
                 </td>
                 <td class="text-center" id="money${stt}"></td>
+                <td class="text-center"><button type="button" id="delete${stt}" class="btn-del-attr btn bg-danger" onclick="deleteOrder(${stt});">Xóa</button></td>
             </tr>`;
             $('#order').append(text);
             setProduct(stt);
@@ -309,6 +317,17 @@
             }
         }
 
+        function deleteOrder(id) {
+            var sum_old = parseInt($(`#sumPrice`).html());
+            var money = parseInt($(`#money${parseInt(id)}`).html());
+            var tong = parseInt(sum_old-money);
+            var tongcong_old = parseInt($(`#total`).html());
+            var tongcong = parseInt(tongcong_old-money);
+            $('#sumPrice').html(tong);
+            $('#total').html(tongcong);
+            $(`#delete${id}`).closest('tr').remove();
+        }
+
         function setProduct(id) {
             let sumPrice = 0;
 
@@ -320,7 +339,13 @@
                 let price = JSON.parse($(`select[name="product[${id}][name]"]`).val()).export_prince * $(`input[name="product[${id}][number]"]`).val();
                 $(`#money${id}`).text(price);
                 for (let i = 0; i <= stt; i++) {
-                    let price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    if ($(`select[name="product[${i}][name]"]`).val())
+                    {
+                        price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    }
+                    else{
+                        price = parseInt('0');
+                    }
                     sumPrice += price;
                 }
                 $('#sumPrice').text(sumPrice);

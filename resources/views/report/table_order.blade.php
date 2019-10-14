@@ -48,8 +48,8 @@
                     <div class="col-lg-7">
                         <select class="form-control" required name="district_id" id="district">
                             <option value="" class="d-none" disabled selected>Chọn huyện..</option>
-                            @foreach($provinces->first()->districts as $districts)
-                                <option value="{{ $districts->id }}" {{ $order->customer->district_id == $districts->id ? 'selected' : '' }}>{{ $districts->name }}</option>
+                            @foreach($districts as $district)
+                                <option value="{{ $district->id }}" {{ $order->customer->district_id == $district->id ? 'selected' : '' }}>{{ $district->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -165,6 +165,7 @@
                         <th style="width: 100px">Số lượng</th>
                         <th>Giá bán</th>
                         <th>Thành tiền</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody id="order">
@@ -173,14 +174,14 @@
                         <tr>
                             <td class="text-center font-weight-bold">{{ $i + 1 }}</td>
                             <td>
-                                <select class="form-control select2" id="" name="product[{{ $i }}][name]" onchange="setProduct({{ $i }})">
+                                <select class="form-control select2" id="name{{ $i }}" name="product[{{ $i }}][name]" onchange="setProduct({{ $i }}); setType({{ $i }});">
                                     <option value=""></option>
                                     @foreach($products as $product)
                                         <option value="{{ $product }}" {{ ($orderProduct->product->id == $product->id) ? 'selected' : '' }}>{{ $product->code }}</option>
                                     @endforeach
                                 </select>
                             </td>
-                            <td>
+                            <td id="selectType{{ $i }}">
                                 <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                     <option value=""></option>
                                     @foreach($typeProducts as $typeProduct)
@@ -195,20 +196,21 @@
                             <td class="text-center" id="price{{ $i }}">
                             </td>
                             <td class="text-center" id="money{{ $i }}"></td>
+                            <td class="text-center"><button type="button" id="delete{{ $i }}" class="btn-del-attr btn bg-danger" onclick="deleteOrder({{ $i  }});">Xóa</button></td>
                         </tr>
                         @php($i++)
                     @endforeach
                     <tr>
                         <td class="text-center font-weight-bold">{{ $i + 1 }}</td>
                         <td>
-                            <select class="form-control select2" id="" name="product[{{ $i }}][name]" onchange="setProduct({{ $i }})">
+                            <select class="form-control select2" id="" name="product[{{ $i }}][name]" onchange="setProduct({{ $i }}); setType({{ $i }});">
                                 <option value=""></option>
                                 @foreach($products as $product)
                                     <option value="{{ $product }}">{{ $product->code }}</option>
                                 @endforeach
                             </select>
                         </td>
-                        <td>
+                        <td id="selectType{{ $i }}">
                             <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                 <option value=""></option>
                                 @foreach($typeProducts as $typeProduct)
@@ -223,6 +225,7 @@
                         <td class="text-center" id="price{{ $i }}">
                         </td>
                         <td class="text-center" id="money{{ $i }}"></td>
+                        <td class="text-center"><button type="button" id="delete{{ $i }}" class="btn-del-attr btn bg-danger" onclick="deleteOrder({{ $i }});">Xóa</button></td>
                     </tr>
                     </tbody>
                     <tr>
@@ -230,22 +233,27 @@
                             <button type="button" class="btn btn-danger" onclick="addOrder()">+</button>
                         </td>
                         <td colspan="6" class="text-center text-danger"><h4>. . .</h4></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th colspan="6">Cộng tiền hàng</th>
                         <td class="text-center" id="sumPrice">0</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th colspan="6">Chiết khấu</th>
                         <td class="text-center" id="sale">0</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th colspan="6">Phí vận chuyển</th>
                         <td class="text-center" id="ship">0</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th colspan="6">Tổng cộng</th>
                         <td class="text-center" id="total">0</td>
+                        <td></td>
                     </tr>
                 </table>
             </div>
@@ -259,3 +267,8 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
     </div>
 </form>
+<script>
+    $(document).ready(function() {
+        $(".select2").select2({});
+    });
+</script>
