@@ -104,8 +104,12 @@ class OrderController extends Controller
 
     public function info(Request $request)
     {
+        $province_id = Order::with('orderProducts.product', 'orderProducts.type', 'customer.district')->findOrFail($request->id)->customer->district->province_id;
+        $districts = District::where('province_id', $province_id)->orderBy('name')->get();
+
         $respon = [
             'provinces' => Province::with('districts')->orderBy('name')->get(),
+            'districts' => $districts,
             'orderSources' => OrderSource::all(),
             'types' => Type::where('level', Type::CUSTOMER)->get(),
             'typeOrders' => Type::where('level', Type::ORDER)->get(),

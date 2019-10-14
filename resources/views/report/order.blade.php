@@ -226,8 +226,6 @@
                 window.location.href = location + '&phone=' + phone;
             }
         }
-
-
         let stt = 0;
         function setEditAddress(stt, id) {
             $('#getEditAddress').val($(`#address${stt}`).text());
@@ -250,7 +248,6 @@
                 })
             })
         }
-
         function setEditNote(stt, id) {
             $('#getEditNote').val($(`#note${stt}`).text());
             $('#btnModalNote').trigger('click');
@@ -272,7 +269,6 @@
                 })
             })
         }
-
         function setType(id) {
             let $code = $(`select[name="product[${id}][name]"]`).val();
             if($code) {
@@ -292,7 +288,6 @@
                 })
             }
         }
-
         function editStatus(value, id) {
             let x = confirm('Xác nhận thay đổi trạng thái đơn hàng.');
             if (x) {
@@ -309,7 +304,6 @@
                 })
             }
         }
-
         function setInfoCustomer(id) {
             $.ajax({
                 url: "{{ route('customer.info') }}",
@@ -338,7 +332,6 @@
                 }
             })
         }
-
         function getInfoOrder(id) {
             $.ajax({
                 url: "{{ route('order.info') }}",
@@ -360,7 +353,6 @@
                 }
             })
         }
-
         function getDistricts(id) {
             $.ajax({
                 url: "{{ route('get.district') }}",
@@ -380,7 +372,6 @@
                 }
             })
         }
-
         let $products = JSON.parse('<?= json_encode($products) ?>');
         let $typeProducts = JSON.parse('<?= json_encode($typeProducts) ?>');
         function addOrder() {
@@ -388,14 +379,14 @@
             let text = `<tr>
                 <td class="text-center font-weight-bold">${stt + 1}</td>
                 <td>
-                    <select class="form-control select2" id="" name="product[${stt}][name]" onchange="setProduct(${stt})">
+                    <select class="form-control select2" id="" name="product[${stt}][name]" onchange="setProduct(${stt}); setType(${stt});">
                         <option value=""></option>
                         @foreach($products as $product)
                         <option value="{{ $product }}">{{ $product->code }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td>
+                <td id="selectType${stt}">
                     <select class="form-control select2" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
                         <option value=""></option>
                         @foreach($typeProducts as $typeProduct)
@@ -410,6 +401,7 @@
                 <td class="text-center" id="price${stt}">
                 </td>
                 <td class="text-center" id="money${stt}"></td>
+                <td class="text-center"><button type="button" id="delete${stt}" class="btn-del-attr btn bg-danger" onclick="deleteOrder(${stt});">Xóa</button></td>
             </tr>`;
             $('#order').append(text);
             setProduct(stt);
@@ -417,9 +409,20 @@
             });
         }
 
+        function deleteOrder(id) {
+            var sum_old = parseInt($(`#sumPrice`).html());
+            var money = parseInt($(`#money${parseInt(id)}`).html());
+            var tong = parseInt(sum_old-money);
+            var tongcong_old = parseInt($(`#total`).html());
+            var tongcong = parseInt(tongcong_old-money);
+            $('#sumPrice').html(tong);
+            $('#total').html(tongcong);
+            $(`#delete${id}`).closest('tr').remove();
+        }
+
+
         function setProduct(id) {
             let sumPrice = 0;
-
             if($(`select[name="product[${id}][name]"]`).val() && $(`select[name="product[${id}][type]"]`).val())
             {
                 $(`#nameProduct${id}`).text(JSON.parse($(`select[name="product[${id}][name]"]`).val()).name
@@ -428,7 +431,13 @@
                 let price = JSON.parse($(`select[name="product[${id}][name]"]`).val()).export_prince * $(`input[name="product[${id}][number]"]`).val();
                 $(`#money${id}`).text(price);
                 for (let i = 0; i <= stt; i++) {
-                    let price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    if ($(`select[name="product[${i}][name]"]`).val())
+                    {
+                        price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    }
+                    else{
+                        price = parseInt('0');
+                    }
                     sumPrice += price;
                 }
                 $('#sumPrice').text(sumPrice);
@@ -436,7 +445,6 @@
             setSale();
             setShip()
         }
-
         function setSale() {
             if ($('select[name=discount_type]').val() === '%') {
                 $('#sale').text($('#sumPrice').text() * $('input[name=discount]').val() / 100);
@@ -445,18 +453,15 @@
             }
             setTotal();
         }
-
         function setShip() {
             $('#ship').text($('input[name=ship]').val());
             setTotal();
         }
-
         function setTotal() {
             $('#total').text(parseInt($('#ship').text()) + parseInt($('#sumPrice').text()) - parseInt($('#sale').text()));
             $('#sumTotal').val($('#sumPrice').text());
             $('#sumSale').val($('#sale').text());
         }
-
         function checkPrint() {
             $('input[name=checkPrint]').val(1);
             $('#formSubmit').submit();

@@ -15,7 +15,7 @@
         <form id="formAddProduct" action="{{ route('add.store_product') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row mt-5">
-                <div class="col-3">
+                <div class="col-2">
                     <label for="image" class="btn btn-danger w-100">Chọn ảnh ..</label>
                     <input type="file" class="d-none" id="image" required name="image" onchange="previewImage(event)">
                     @if ($errors->has('image'))
@@ -25,7 +25,7 @@
                     @endif
                     <img class="my-1 w-100 h-auto" id="imagePreview">
                 </div>
-                <div class="col-6">
+                <div class="col-5">
                     <table class="w-100">
                         <tr class="w-100">
                             <td class="w-25">Mã sản phẩm <span class="text-danger">*</span></td>
@@ -104,6 +104,37 @@
                         </tr>
                     </table>
                 </div>
+                <div class="col-5">
+                    <table class="table table-bordered">
+                        <tr class="bg-danger">
+                            <th class="text-center">STT</th>
+                            <th class="text-center">Thuộc tính</th>
+                            <th class="text-center">Tên thuộc tính</th>
+                            <th class="text-center"></th>
+                        </tr>
+                        <tbody id="tbody">
+                            <tr>
+                                <td class="text-center align-middle">1</td>
+                                <td>
+                                    <select class="form-control select2" name="attr[0]" onchange="getType(0)">
+                                        <option value=""></option>
+                                        @foreach($types as $type)
+                                            <option value="{{ $type }}">{{ $type->code }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td id="nameType0" class="align-middle"></td>
+                                <td class="text-center"><button type="button" class="btn-del-attr btn bg-danger">Xóa</button></td>
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td class="text-center"><a href="javascript:void(0)" class="btn bg-danger" onclick="addType()">+</a></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <input type="hidden" id="checkBtn" name="check">
             <div class="row mt-5">
@@ -124,6 +155,10 @@
                 $('#checkBtn').val(1);
                 $('#formAddProduct').submit();
             });
+
+            $(".btn-del-attr").click(function(){
+                $(this).closest('tr').remove();
+            });
         });
         function previewImage(event)
         {
@@ -133,6 +168,39 @@
                 $('#imagePreview').attr('src', reader.result);
             };
             reader.readAsDataURL(event.target.files[0]);
+        }
+
+        var stt = 0;
+        function getType(stt)
+        {
+            if($(`select[name="attr[${stt}]"]`).val()){
+                var type = JSON.parse($(`select[name="attr[${stt}]"]`).val());
+                $(`#nameType${stt}`).html(`${type.name}`);
+            }
+        }
+
+        function addType()
+        {
+            stt++;
+            $('#tbody').append(`
+                <tr>
+                    <td class="text-center">${stt+1}</td>
+                    <td>
+                        <select class="form-control select2" name="attr[${stt}]" onchange="getType(${stt})">
+                            <option value=""></option>
+                            @foreach($types as $type)
+                                <option value="{{ $type }}">{{ $type->code }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td id="nameType${stt}" class="align-middle"></td>
+                    <td class="text-center"><button type="button" class="btn-del-attr btn bg-danger">Xóa</button></td>
+                </tr>
+            `);
+            getType(stt);
+            $(".btn-del-attr").click(function(){
+                $(this).closest('tr').remove();
+            });
         }
     </script>
 @endsection
