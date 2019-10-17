@@ -72,4 +72,8 @@ class ProductSupplier extends Model
     {
         return $this->type->name;
     }
+    public function getTypeCodeAttribute()
+    {
+        return $this->type->code;
+    }
 }

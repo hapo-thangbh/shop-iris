@@ -19,24 +19,24 @@
         </div>
         <form action="{{ route('product.import') }}" method="GET" class="row">
             <div class="col-2">
-                <input type="text" class="form-control" name="code" placeholder="Mã hàng">
+                <input type="text" class="form-control" name="code" placeholder="Mã hàng" value="{{ request('code') ?: '' }}">
             </div>
 
             <div class="col-2">
                 <select name="supplier_id" class="form-control select2">
                     <option value="">Nhà Cung Cấp (Tất cả)</option>
                     @foreach ($suppliers as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                        <option {{ $supplier->id == request('supplier_id') ? 'selected' : '' }} value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                     @endforeach
                 </select>
             </div>
 
             <div class="col-2">
-                <input type="date" class="form-control" name="fromDate" value="{{ date('Y-m-01') }}">
+                <input type="date" class="form-control" name="fromDate" value="{{ request('fromDate') ?: date('Y-m-01') }}">
             </div>
 
             <div class="col-2">
-                <input type="date" class="form-control" name="toDate" value="{{ date('Y-m-d') }}">
+                <input type="date" class="form-control" name="toDate" value="{{ request('toDate') ?: date('Y-m-d') }}">
             </div>
 
             <div class="col-2">
@@ -77,12 +77,7 @@
                     </tr>
                 </table>
                 {{ $product_suppliers
-                ->appends([
-                    'code' => $request->code,
-                    'supplier' => $request->supplier,
-                    'fromDate' => $request->fromDate,
-                    'toDate' => $request->toDate,
-                ])
+                ->appends(request()->all())
                 ->links() }}
             </div>
         </div>

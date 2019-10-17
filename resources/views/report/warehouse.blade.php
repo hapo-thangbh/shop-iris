@@ -81,29 +81,30 @@
                             <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->import_prince) }}</td>
                             @endif
                             <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->export_prince) }}</td>
+                            @php($productSupplierFirst = $product->productSuppliers->sortBy('type_code')->first())
                             <td class="text-center">
                                 @if($product->productSuppliers->count())
-                                    {{ $product->productSuppliers->first()->type->code }}
+                                    {{ $productSupplierFirst->type_code }}
                                 @endif
                             </td>
                             <td class="text-center">
                                 @if($product->productSuppliers->count())
-                                {{ $product->productSuppliers->first()->type->name }}
+                                {{ $productSupplierFirst->type_name }}
                                 @endif
                             </td>
                             <td class="text-center">
                                 @if($product->productSuppliers->count())
-                                {{ $product->productSuppliers->first()->total_import - $product->productSuppliers->first()->total_export }}
+                                {{ $productSupplierFirst->total_import - $productSupplierFirst->total_export }}
                                 @endif
                             </td>
                             <td class="text-center">
                                 @if($product->productSuppliers->count())
-                                {{ $product->productSuppliers->first()->total_export }}
+                                {{ $productSupplierFirst->total_export }}
                                 @endif
                             </td>
                             <td class="text-center">
                                 @if($product->productSuppliers->count())
-                                {{ $product->productSuppliers->first()->total_wait_send }}
+                                {{ $productSupplierFirst->total_wait_send }}
                                 @endif
                             </td>
                             @if(auth()->user()->level == 1)
@@ -112,14 +113,14 @@
                         </tr>
                         <?php $check = 0 ?>
                         <?php $checkCode = [] ?>
-                        @foreach ($product->productSuppliers->unique('type_id') as $productSupplier)
+                        @foreach ($product->productSuppliers->unique('type_id')->sortBy('type_code') as $productSupplier)
                             @if($check)
                                 <tr class="border-bottom border-danger text-center">
                                     <td>
-                                        {{ $productSupplier->type->code }}
+                                        {{ $productSupplier->type_code }}
                                     </td>
                                     <td class="text-center">
-                                        {{ $productSupplier->type->name }}
+                                        {{ $productSupplier->type_name }}
                                     </td>
                                     <td class="text-center">
                                         {{ $productSupplier->total_import - $productSupplier->total_export }}
@@ -211,7 +212,7 @@
                                         <td>Tên thuộc tính</td>
                                     </tr>
                                     <tbody id="attribute">
-                                        
+
                                     </tbody>
                                     <tr>
                                         <td colspan="2" class="text-center">
@@ -294,7 +295,7 @@
             `;
             $('#attribute').append(text);
             // setProduct(stt);
-            // $(".select2").select2({ 
+            // $(".select2").select2({
             // });
         }
     </script>

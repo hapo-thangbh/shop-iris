@@ -17,6 +17,7 @@ use App\Type;
 use App\ProductSupplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 
 class ProductController extends Controller
 {
@@ -49,7 +50,7 @@ class ProductController extends Controller
         }
         $j = $product_suppliers->count();
         $amount_create = count($request->attribute_code) - $j;
-        for ($i=0; $i < $amount_create; $i++) { 
+        for ($i=0; $i < $amount_create; $i++) {
             $type = Type::create([
                 'code' => $request->attribute_code[$j],
                 'name' => $request->attribute_name[$j],
@@ -217,6 +218,7 @@ class ProductController extends Controller
 
     public function import(Request $request)
     {
+        $now = now();
         $products = ProductSupplier::with('supplier', 'product')->orderByDesc('created_at');
         if($request->code) {
             $code = $request->code;
@@ -229,9 +231,15 @@ class ProductController extends Controller
         }
         if ($request->fromDate) {
             $products->where('created_at', '>=', $request->fromDate);
+        } else {
+            $products->where('created_at', '>=', $now->format('Y-m-01'));
         }
         if ($request->toDate) {
             $endDate = strtotime(date("Y-m-d", strtotime($request->toDate)) . " +1 day");
+            $endDate = strftime("%Y-%m-%d", $endDate);
+            $products->where('created_at', '<=', $endDate);
+        } else {
+            $endDate = strtotime(date("Y-m-d", strtotime($now->format('Y-m-d'))) . " +1 day");
             $endDate = strftime("%Y-%m-%d", $endDate);
             $products->where('created_at', '<=', $endDate);
         }

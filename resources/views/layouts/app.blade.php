@@ -59,7 +59,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     @if(auth()->user()->level == 1)
                         <li class="nav-item">
-                            <a class="nav-link text-white @if(strpos(request()->url(), '/report/store-sale')) active @endif" href="{{ route('report.store_sale') }}">Trang chủ</a>
+                            <a class="nav-link text-white" href="{{ route('index') }}">Trang chủ</a>
                         </li>
 
                         <li class="nav-item">
