@@ -77,6 +77,9 @@ class Product extends Model
     public static function search($request)
     {
         $products = Product::with('category', 'productSuppliers.type')->orderBy('created_at', 'DESC');
+        // $products = Product::with(['productSuppliers.type' => function ($q) {
+        //     $q->orderBy('code', 'desc')->get();
+        // }])->orderBy('created_at', 'DESC');
         if ($request->code_search) {
             $products->where('code', 'LIKE', "%$request->code_search%");
         }
