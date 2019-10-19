@@ -50,26 +50,21 @@ class OrderController extends Controller
             }
         }
 
-        if ($request->phone) {
-            $phone = $request->phone;
-            $orders->whereHas('customer', function ($query) use ($phone){
-                $query->where('phone', 'LIKE', '%' . $phone . '%');
-            });
-            $phone = $request->phone;
-            $orders = $orders->whereHas('customer', function ($query) use ($phone){
-                $query->where('phone', 'LIKE', '%' . $phone . '%');
-            });
-        }
         if ($request->code) {
             $code = $request->code;
-            $orders->where('id', $code)
+            $orders->where('code', $code)
             ->orwhereHas('customer', function ($query) use ($code){
                 $query->where('name', 'LIKE', '%' . $code . '%');
-            })->orwhereHas('orderSource', function ($query) use ($code){
-                $query->where('name', 'LIKE', '%' . $code . '%');
-            })
-            ;
+            })->orwhereHas('customer', function ($query) use ($code){
+                $query->where('phone', 'LIKE', '%' . $code . '%');
+            });
         }
+
+        if ($request->order_source_id) {
+            $order_source_id = $request->order_source_id;
+            $orders = $orders->where('order_source_id', $order_source_id);
+        }
+        
         if ($request->start_date) {
             $orders->where('created_at', '>=', $request->start_date);
         }
@@ -91,6 +86,7 @@ class OrderController extends Controller
             'titlePage' => 'Thống kê đơn đặt hàng',
             'orders' => $orders->paginate(12),
             'statuses' => Status::with('orders')->where('type', Status::ORDER)->get(),
+            'orderSources' => OrderSource::all(),
             'transports' => Transport::all(),
             'provinces' => Province::all(),
             'request' => $request,

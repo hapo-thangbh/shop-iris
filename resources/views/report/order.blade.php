@@ -7,15 +7,24 @@
             <a class="ml-1 col-md-2 btn btn-danger" href="{{ route('product.export') }}">+ Bán hàng</a>
         </div>
         <form class="row" action="{{ route('report.order') }}" method="GET" id="form-search-order">
-            <div class="form-inline">
-                <input type="text" class="form-control mx-1" placeholder="Mã đơn, tên khách, nguồn đơn" name="code" value="{{ $request->code }}">
-                <input type="text" class="form-control mx-1" placeholder="Số điện thoại" name="phone" value="{{ $request->phone }}">
+            <div class="form-inline w-100">
+                <input type="text" class="form-control mx-1 col-3" placeholder="Mã đơn, tên khách, số điện thoại" name="code" value="{{ $request->code }}">
                 <div class="mx-1 my-1">
                     <select class="form-control select2" name="status_id">
                         <option value="">Trạng thái (tất cả)</option>
                         @foreach($statuses as $status)
                             <option value="{{ $status->id }}" {{ $status->id == $request->status_id ? 'selected' : '' }}>
                                 {{ $status->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mx-1 my-1">
+                    <select class="form-control select2" name="order_source_id">
+                        <option value="">Nguồn đơn (tất cả)</option>
+                        @foreach($orderSources as $orderSource)
+                            <option value="{{ $orderSource->id }}" {{ $orderSource->id == $request->order_source_id ? 'selected' : '' }}>
+                                {{ $orderSource->name }}
                             </option>
                         @endforeach
                     </select>
@@ -138,13 +147,14 @@
         <div class="mt-3">
             {{ $orders
             ->appends([
-            'phone' => $request->phone,
-            'status_id' => $request->status_id,
-            'transport_id' => $request->transport_id,
-            'province_id' => $request->province_id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'search' => 1,
+                'phone' => $request->phone,
+                'status_id' => $request->status_id,
+                'order_source_id' => $request->order_source_id,
+                'transport_id' => $request->transport_id,
+                'province_id' => $request->province_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'search' => 1,
             ])
             ->links() }}
         </div>
