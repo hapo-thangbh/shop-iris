@@ -133,7 +133,7 @@
             <tr>
                 <td class="text-center font-weight-bold">${stt + 1}</td>
                 <td>
-                    <select class="form-control" id="" name="product[${stt}][code]" onchange="setProduct(${stt}); setType(${stt});">
+                    <select class="form-control select2" id="" name="product[${stt}][code]" onchange="setProduct(${stt}); setType(${stt});">
                         <option value=""></option>
                         @foreach ($products as $product)
                             <option value="{{ $product }}">{{ $product->code }}</option>
@@ -141,7 +141,7 @@
                     </select>
                 </td>
                 <td id="selectType${stt}">
-                    <select class="form-control" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
+                    <select class="form-control select2" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
                         <option value=""></option>
                         @foreach ($productSuppliers as $productSupplier)
                             <option value="{{ $productSupplier->name }}">{{ $productSupplier->name }}</option>
@@ -198,7 +198,9 @@
 
     function setPrice(stt) {
         // Giá
-        $(`#price${stt}`).val(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).import_prince);
+        if($(`select[name="product[${stt}][code]"]`).val()) {
+            $(`#price${stt}`).val(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).import_prince);
+        }
     }
 
     function setTotalMoney(stt) {

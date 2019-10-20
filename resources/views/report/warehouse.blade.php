@@ -108,7 +108,7 @@
                                 @endif
                             </td>
                             @if(auth()->user()->level == 1)
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }})">Sửa</button></td>
+                            <td rowspan="{{ $product->productSuppliers->count() }}" class="align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }}, {{ $product->productSuppliers->unique('type_id') }}, {{ $typeProducts }})">Sửa</button></td>
                             @endif
                         </tr>
                         <?php $check = 0 ?>
@@ -208,7 +208,7 @@
                             <div class="col-sm-9">{{-- id="attribute" --}}
                                 <table class="table table-bordered">
                                     <tr>
-                                        <td>Thuộc tính</td>
+                                        <td>Mã thuộc tính</td>
                                         <td>Tên thuộc tính</td>
                                     </tr>
                                     <tbody id="attribute">
@@ -237,14 +237,14 @@
 
 @section('script')
     <script>
-        function editProduct(product, categories) {
-            console.log(product);
+        let stt = 0;
+        function editProduct(product, categories, productSuppliers, typeProducts) {
+            $(".select2").select2({});
             $('#formUpdate').attr('action', `/product/update/${product.id}`);
             $('input[name=import_prince]').val(product.import_prince);
             $('input[name=export_prince]').val(product.export_prince);
             $('input[name=code]').val(product.code);
             $('input[name=name]').val(product.name);
-
             // danh mục
             var option = '';
             for (var i = 0; i < categories.length; i++) {
@@ -260,43 +260,92 @@
             $(`#category`).html(text);
             $(`option[data-id=${product.category_id}]`).attr('selected', 'selected');
 
+
+
+
             // thuộc tính
             var attribute = '';
-            var product_suppliers = product.product_suppliers;
-            for (var i = 0; i < product_suppliers.length; i++) {
+            var option = '';
+            // Convert object to array
+            var productSuppliers = $.map(productSuppliers, function(value, index) {
+                return [value];
+            });
+
+
+            for (var i = 0; i < productSuppliers.length; i++) {
+                $.each( typeProducts, function( key, typeProduct ) {
+                    var selected = '';
+                    if (productSuppliers[i].type.id == typeProduct.id) {
+                        var selected = 'selected';
+                    }
+                    option += `
+                        <option ${selected} value="${typeProduct.id}">${typeProduct.code}</option>
+                    `;
+                });
+
                 attribute += `
                     <tr>
                         <td>
-                            <input required type="text" class="form-control mb-2" name="attribute_code[]" value="${product_suppliers[i].type.code}">
+                            <select class="form-control select2" name="attribute_code[${stt++}]" onchange="setType(${stt-1});">
+                                ${option}
+                            </select>
                         </td>
-                        <td>
-                            <input required type="text" class="form-control mb-2" name="attribute_name[]" value="${product_suppliers[i].type.name}">
+                        <td id="inputTypeName${stt-1}" class="align-middle">
+                            ${productSuppliers[i].type.name}
                         </td>
                     </tr>
                 `;
+                option = '';
             }
+
             $(`#attribute`).html(attribute);
+            $(".select2").select2({});
+
+
 
 
             $('#edit').modal('show');
         }
-        let stt = 0;
+        
+
+
+        function setType(id) {
+            let code = $(`select[name="attribute_code[${id}]"]`).val();
+            if(code) {
+                $.ajax({
+                    url: "{{ route('product.get_type_name') }}",
+                    method: 'GET',
+                    data: {
+                        id: code,
+                    },
+                    success: function (respon) {
+                        $(`#inputTypeName${id}`).html(respon);
+                        $(".select2").select2({
+                        });
+                    }
+                })
+            }
+        }
+        
+
+        let $typeProducts = JSON.parse('<?= json_encode($typeProducts) ?>');
         function addOrder() {
-            stt++;
             let text = `
                 <tr>
-                    <td>
-                        <input required type="text" class="form-control mb-2" name="attribute_code[]" value="">
-                    </td>
-                    <td>
-                        <input required type="text" class="form-control mb-2" name="attribute_name[]" value="">
-                    </td>
-                </tr>
+                <td>
+                    <select class="form-control select2" required name="attribute_code[${stt}]" onchange="setType(${stt});">
+                        <option value=""></option>
+                        @foreach($typeProducts as $typeProduct)
+                        <option value="{{ $typeProduct->id }}">{{ $typeProduct->code }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td id="inputTypeName${stt}" class="align-middle"></td>
+            </tr>
             `;
             $('#attribute').append(text);
-            // setProduct(stt);
-            // $(".select2").select2({
-            // });
+            stt++;
+            $(".select2").select2({});
         }
     </script>
 @endsection

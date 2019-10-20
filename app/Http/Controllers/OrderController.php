@@ -92,7 +92,6 @@ class OrderController extends Controller
             'request' => $request,
             'typeProducts' => Type::where('level', Type::PRODUCT)->get(),
             'products' => Product::all(),
-            'products' => Product::all(),
             'array_customer_id' => $array_customer_id,
         ];
         return view('report.order', $data);

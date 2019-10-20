@@ -30,6 +30,8 @@ class ProductController extends Controller
     {
         $data = $request->all();
         $product = Product::findOrFail($id);
+        // dd($data);
+        // dd(array_values($product->productSuppliers->unique('type_id')->toArray()));
         if ($request->image) {
             $file1Extension = $request->image
                 ->getClientOriginalExtension();
@@ -40,29 +42,25 @@ class ProductController extends Controller
         }
         $product->update($data);
 
-        $product_suppliers = $product->productSuppliers;
-        foreach ($product_suppliers as $i => $product1) {
-            $product1->type->update([
-                'code' => $request->attribute_code[$i],
-                'name' => $request->attribute_name[$i],
-                'level' => 1
+        $product_suppliers = array_values($product->productSuppliers->unique('type_id')->toArray());
+        foreach ($product_suppliers as $i => $product_supplier) {
+            // dd($product_supplier);
+            // Type::find($product_supplier['type_id']));
+            ProductSupplier::find($product_supplier['id'])->update([
+                'type_id' => $request->attribute_code[$i],
             ]);
         }
-        $j = $product_suppliers->count();
+
+        $j = count($product_suppliers);
         $amount_create = count($request->attribute_code) - $j;
         for ($i=0; $i < $amount_create; $i++) {
-            $type = Type::create([
-                'code' => $request->attribute_code[$j],
-                'name' => $request->attribute_name[$j],
-                'level' => 1
-            ]);
             ProductSupplier::create([
-                'supplier_id' => $product_suppliers->first()->supplier_id,
+                'supplier_id' => $product->supplier_id,
                 'product_id' => $product->id,
-                'number' => 1,
+                'number' => 0,
                 'price' => $product->import_prince,
                 'status_id' => 6,
-                'type_id' => $type->id,
+                'type_id' => $request->attribute_code[$j],
             ]);
             $j++;
         }
@@ -301,6 +299,7 @@ class ProductController extends Controller
             'categories' => Category::all(),
             'suppliers' => Supplier::all(),
             'products' => $products,
+            'typeProducts' => Type::where('level', Type::PRODUCT)->get(),
             'request' => $request,
         ];
         return view('report.warehouse', $respon);
@@ -329,5 +328,13 @@ class ProductController extends Controller
         $productSuppliers = $product->productSuppliers()->get()->unique('type_id');
         
         return view('product.select_type', compact('productSuppliers', 'stt'));
+    }
+
+
+    public function ajaxGetTypeName(Request $request)
+    {
+        $name = Type::findOrFail($request->id)->name;
+        
+        return view('product.input_type_name', compact('name'));
     }
 }
