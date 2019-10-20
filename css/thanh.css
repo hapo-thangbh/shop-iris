@@ -90,4 +90,6 @@ span.select2.select2-container.select2-container--default{
 html, body, .wrapper {
     overflow-x: inherit;
 }
-
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -76,7 +76,7 @@
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fas fa-map-marker-alt"></i>
                             <span id="address{{ $stt }}" title="{{ $order->customer->address }}">{{ str_limit($order->customer->address, 25) }}</span>
-                            <i class="fas fa-pen ml-2" onclick="setEditAddress('{{ $stt }}', '{{ $order->customer->id }}')"></i>
+                            <i class="fas fa-pen ml-2 cursor-pointer" onclick="setEditAddress('{{ $stt }}', '{{ $order->customer->id }}')"></i>
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-phone" aria-hidden="true"></i>
@@ -93,7 +93,7 @@
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-shopping-basket" aria-hidden="true"></i>
                             <span class="attribute-product">
-                                {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }} 
+                                {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }}
                                 ({{ $order->orderProducts[0]->number }});
                                 <img src="{{ asset('storage/'.$order->orderProducts[0]->product->image) }}">
                             </span>
@@ -101,7 +101,7 @@
                             <?php $check = 0 ?>
                             @foreach($order->orderProducts as $orderProduct)
                                 @if($check)
-                                    <span class="attribute-product">{{ $orderProduct->product->code.$orderProduct->type->code }} 
+                                    <span class="attribute-product">{{ $orderProduct->product->code.$orderProduct->type->code }}
                                         ({{ number_format($orderProduct->number) }});
                                         <img src="{{ asset('storage/'.$orderProduct->product->image) }}">
                                     </span>
@@ -113,7 +113,7 @@
                         <div class="pt-2 pb-2">
                             <i class="mr-2 far fa-calendar-alt"></i>
                             <span id="note{{ $stt }}">{{ $order->note }}</span>
-                            <i class="fas fa-pen ml-2" onclick="setEditNote('{{ $stt }}', '{{ $order->id }}')"></i>
+                            <i class="fas fa-pen ml-2 cursor-pointer" onclick="setEditNote('{{ $stt }}', '{{ $order->id }}')"></i>
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fas fa-dollar-sign"></i>
@@ -129,7 +129,8 @@
                                 @endforeach
                             </select>
                             <a class="mt-2 fa fa-print text-dark pl-2" aria-hidden="true" href="{{ route('print_order', $order->id) }}"></a>
-                            <i class="mt-2 mr-2 fas fa-pen pl-2" aria-hidden="true"  onclick="getInfoOrder({{ $order->id }})"></i>
+                            <i class="mt-2 mr-2 fas fa-pen pl-2 cursor-pointer" aria-hidden="true"  onclick="getInfoOrder({{ $order->id }})"></i>
+                            <a class="mt-2 fas fa-plus text-dark pl-2" aria-hidden="true" href="{{ route('product.export_for_customer', $order->customer->id) }}"></a>
                         </div>
                     </div>
                 </div>
