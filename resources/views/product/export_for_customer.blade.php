@@ -58,8 +58,8 @@
                         <div class="col-lg-7">
                             <select class="form-control" id="" required name="order_source_id">
                                 <option value="" class="d-none" disabled selected>Chọn nguồn..</option>
-                                @foreach($orderSources as $orderSource)
-                                    <option value="{{ $orderSource->id }}">{{ $orderSource->name }}</option>
+                                @foreach($orderSources as $key => $orderSource)
+                                    <option value="{{ $orderSource->id }}" @if(request('is_default') && $key == 0) selected @endif>{{ $orderSource->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -117,8 +117,8 @@
                         <div class="col-lg-8">
                             <select class="form-control" id="" name="type_order_id" required>
                                 <option value="" class="d-none" disabled selected>Chọn loại đơn..</option>
-                                @foreach($typeOrders as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                @foreach($typeOrders as $key => $type)
+                                    <option value="{{ $type->id }}" @if(request('is_default') && $key == 0) selected @endif>{{ $type->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -128,8 +128,8 @@
                         <div class="col-lg-8">
                             <select class="form-control" id="" required name="status_id">
                                 <option value="" class="d-none" disabled selected>Chọn trạng thái..</option>
-                                @foreach($statuses as $status)
-                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                @foreach($statuses as $key => $status)
+                                    <option value="{{ $status->id }}" @if(request('is_default') && $key == 4) selected @endif>{{ $status->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -139,8 +139,8 @@
                         <div class="col-lg-8">
                             <select class="form-control" id="" required name="transport_id">
                                 <option value="" class="d-none" disabled selected>Chọn vận chuyển..</option>
-                                @foreach($transports as $transport)
-                                    <option value="{{ $transport->id }}">{{ $transport->name }}</option>
+                                @foreach($transports as $key => $transport)
+                                    <option value="{{ $transport->id }}" @if(request('is_default') && $key == 0) selected @endif>{{ $transport->name }}</option>
                                 @endforeach
                             </select>
                         </div>
