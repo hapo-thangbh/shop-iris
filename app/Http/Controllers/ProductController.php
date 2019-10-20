@@ -123,7 +123,7 @@ class ProductController extends Controller
     {
         foreach ($request->product as $product) {
             $productId = json_decode($product['code'], true);
-            $type_id = Type::where('name', $product['type'])->firstOrFail()->id;
+            $type_id = Type::where('name', json_decode($product['type'])->name)->firstOrFail()->id;
             ProductSupplier::create([
                 'supplier_id' => $request->supplier_id,
                 'status_id' => $request->status_id,
@@ -133,6 +133,7 @@ class ProductController extends Controller
                 'type_id' => $type_id
             ]);
         }
+
         if ($request->check) {
             return redirect()->back()->with('msg', trans('messages.success.create'));
         }
