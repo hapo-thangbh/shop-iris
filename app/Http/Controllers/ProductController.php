@@ -106,7 +106,7 @@ class ProductController extends Controller
                 ProductSupplier::create([
                     'supplier_id' => $request->supplier_id,
                     'product_id' => $product->id,
-                    'number' => 1,
+                    'number' => 0,
                     'price' => $request->import_prince,
                     'status_id' => 1,
                     'type_id' => $type->id,
@@ -235,7 +235,7 @@ class ProductController extends Controller
     public function import(Request $request)
     {
         $now = now();
-        $products = ProductSupplier::with('supplier', 'product')->orderByDesc('created_at');
+        $products = ProductSupplier::with('supplier', 'product')->where('number', '>', 0)->orderByDesc('created_at');
         if($request->code) {
             $code = $request->code;
             $products->whereHas('product', function ($query) use ($code){
@@ -263,7 +263,7 @@ class ProductController extends Controller
         $data = [
             'titlePage' => 'Thống Kê Nhập Hàng',
             'suppliers' => Supplier::all(),
-            'product_suppliers' => $products->paginate(ProductSupplier::PAGINATE),
+            'product_suppliers' => $products->paginate(20),
             'request' => $request,
         ];
         return view('product.import', $data);
@@ -294,7 +294,7 @@ class ProductController extends Controller
      */
     public function warehouse(Request $request)
     {
-        $products = Product::search($request)->paginate(Product::PAGINATE);
+        $products = Product::search($request)->paginate(20);
         $respon = [
             'titlePage' => 'Kho hàng',
             'categories' => Category::all(),

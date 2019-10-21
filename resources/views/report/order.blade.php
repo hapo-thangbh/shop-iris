@@ -8,7 +8,7 @@
         </div>
         <form class="row" action="{{ route('report.order') }}" method="GET" id="form-search-order">
             <div class="form-inline w-100">
-                <input type="text" class="form-control mx-1 col-3" placeholder="Mã đơn, tên khách, số điện thoại" name="code" value="{{ $request->code }}">
+                <input type="text" class="form-control mx-1 col-2" placeholder="SĐT, mã đơn, tên khách" name="code" value="{{ $request->code }}">
                 <div class="mx-1 my-1">
                     <select class="form-control select2" name="status_id">
                         <option value="">Trạng thái (tất cả)</option>
