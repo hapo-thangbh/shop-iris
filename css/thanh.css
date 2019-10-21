@@ -80,8 +80,11 @@ span.select2.select2-container.select2-container--default{
 .attribute-product:hover img{
     display: block;
     position: absolute;
-    left: 351px;
+    left: 0;
     z-index: 1;
+    width: 250px;
+    height: 250px;
+    max-width: max-content;
 }
 .order-phone{
     cursor: pointer;

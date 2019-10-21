@@ -53,6 +53,7 @@ Route::prefix('')->middleware('auth')->group(function () {
     });
     Route::prefix('product')->name('product.')->group(function () {
         Route::get('select-type','ProductController@ajaxGetType')->name('get_type');
+        Route::get('input-type-name','ProductController@ajaxGetTypeName')->name('get_type_name');
         Route::get('export','ProductController@export')->name('export');
         Route::get('export/{id}/','ProductController@exportForCustomer')->name('export_for_customer');
         Route::post('export','ProductController@exportStore')->name('store_export');

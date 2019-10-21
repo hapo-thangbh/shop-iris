@@ -17,7 +17,7 @@
             <div class="row mt-5">
                 <div class="col-auto">Nhà cung cấp: </div>
                 <div class="col-2">
-                    <select class="form-control select2" id="" name="supplier_id">
+                    <select required class="form-control" id="" name="supplier_id">
                         <option value=""></option>
                         @foreach ($suppliers as $supplier)
                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-auto">Tình trạng: </div>
                 <div class="col-2">
-                    <select class="form-control select2" id="" name="status_id">
+                    <select class="form-control select2" id="" name="status_id" required>
                         <option value=""></option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -53,7 +53,7 @@
                         <tr>
                             <td class="text-center font-weight-bold">1</td>
                             <td>
-                                <select class="form-control select2" id="" name="product[0][code]" onchange="setProduct(0); setType(0);">
+                                <select required class="form-control select2" id="" name="product[0][code]" onchange="setProduct(0); setType(0);">
                                     <option value=""></option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product }}">{{ $product->code }}</option>
@@ -61,7 +61,7 @@
                                 </select>
                             </td>
                             <td id="selectType0">
-                                <select class="form-control select2" id="" name="product[0][type]" id="type" onchange="setProduct(0)">
+                                <select required class="form-control select2" id="" name="product[0][type]" id="type" onchange="setProduct(0)">
                                     <option value=""></option>
                                     @foreach ($productSuppliers as $productSupplier)
                                         <option value="{{ $productSupplier->name }}">{{ $productSupplier->name }}</option>
@@ -70,10 +70,10 @@
                             </td>
                             <td id="nameProduct0"></td>
                             <td class="text-center">
-                                <input type="number" name="product[0][number]" min="1" class="form-control w-50 m-auto text-center" value="1" onchange="setTotalMoney(0)">
+                                <input type="number" required name="product[0][number]" min="1" class="form-control w-50 m-auto text-center" value="1" onchange="setTotalMoney(0)">
                             </td>
                             <td class="text-center">
-                                <input type="number" id="price0" name="product[0][price]" min="1" class="form-control text-center w-75 m-auto" onchange="setTotalMoney(0)">
+                                <input required type="number" id="price0" name="product[0][price]" min="1" class="form-control text-center w-75 m-auto" onchange="setTotalMoney(0)">
                             </td>
                             <td class="text-center" id="totalMoney0"></td>
                         </tr>
@@ -95,8 +95,8 @@
             </div>
             <input type="hidden" id="checkBtn" name="check">
             <div class="row justify-content-center">
-                <div class="col-3"><button type="button" id="btnSaveFirst" class="btn btn-danger w-100">Lưu</button></div>
-                <div class="col-3"><button type="button" id="btnSaveSecond" class="btn btn-danger w-100">Lưu và tạo mới</button></div>
+                <div class="col-3"><button type="submit" id="btnSaveFirst" class="btn btn-danger w-100">Lưu</button></div>
+                <div class="col-3"><button type="submit" id="btnSaveSecond" class="btn btn-danger w-100">Lưu và tạo mới</button></div>
             </div>
         </form>
         
@@ -119,11 +119,11 @@
 
         $('#btnSaveFirst').click(function () {
             $('#checkBtn').val(0);
-            $('#formAddProduct').submit();
+            // $('#formAddProduct').submit();
         });
         $('#btnSaveSecond').click(function () {
             $('#checkBtn').val(1);
-            $('#formAddProduct').submit();
+            // $('#formAddProduct').submit();
         });
     })
 
@@ -133,7 +133,7 @@
             <tr>
                 <td class="text-center font-weight-bold">${stt + 1}</td>
                 <td>
-                    <select class="form-control" id="" name="product[${stt}][code]" onchange="setProduct(${stt}); setType(${stt});">
+                    <select required class="form-control select2" id="" name="product[${stt}][code]" onchange="setProduct(${stt}); setType(${stt});">
                         <option value=""></option>
                         @foreach ($products as $product)
                             <option value="{{ $product }}">{{ $product->code }}</option>
@@ -141,7 +141,7 @@
                     </select>
                 </td>
                 <td id="selectType${stt}">
-                    <select class="form-control" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
+                    <select required class="form-control select2" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
                         <option value=""></option>
                         @foreach ($productSuppliers as $productSupplier)
                             <option value="{{ $productSupplier->name }}">{{ $productSupplier->name }}</option>
@@ -150,10 +150,10 @@
                 </td>
                 <td id="nameProduct${stt}"></td>
                 <td class="text-center">
-                    <input type="number" id="" name="product[${stt}][number]" min="1" class="form-control w-50 m-auto text-center" value="1" onchange="setTotalMoney(${stt})">
+                    <input required type="number" id="" name="product[${stt}][number]" min="1" class="form-control w-50 m-auto text-center" value="1" onchange="setTotalMoney(${stt})">
                 </td>
                 <td class="text-center">
-                    <input type="number" id="price${stt}" name="product[${stt}][price]" min="0" class="form-control text-center w-75 m-auto" onchange="setTotalMoney(${stt})">
+                    <input required type="number" id="price${stt}" name="product[${stt}][price]" min="0" class="form-control text-center w-75 m-auto" onchange="setTotalMoney(${stt})">
                 </td>
                 <td class="text-center" id="totalMoney${stt}"></td>
             </tr>`
@@ -198,7 +198,9 @@
 
     function setPrice(stt) {
         // Giá
-        $(`#price${stt}`).val(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).import_prince);
+        if($(`select[name="product[${stt}][code]"]`).val()) {
+            $(`#price${stt}`).val(JSON.parse($(`select[name="product[${stt}][code]"]`).val()).import_prince);
+        }
     }
 
     function setTotalMoney(stt) {

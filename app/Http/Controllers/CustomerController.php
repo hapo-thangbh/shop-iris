@@ -28,7 +28,7 @@ class CustomerController extends Controller
         }
         $respon = [
             'titlePage' => 'Thống Kê Khách Hàng',
-            'customers' => $customers->paginate(Customer::PAGINATE),
+            'customers' => $customers->paginate(20),
             'request' => $request,
         ];
         return view('report.customer', $respon);

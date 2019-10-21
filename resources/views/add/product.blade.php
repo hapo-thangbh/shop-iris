@@ -197,6 +197,7 @@
                     <td class="text-center"><button type="button" class="btn-del-attr btn bg-danger">Xóa</button></td>
                 </tr>
             `);
+            $(".select2").select2({});
             getType(stt);
             $(".btn-del-attr").click(function(){
                 $(this).closest('tr').remove();
