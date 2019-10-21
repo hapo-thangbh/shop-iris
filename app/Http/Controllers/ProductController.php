@@ -102,7 +102,7 @@ class ProductController extends Controller
         $product = Product::create($data);
 
 
-        for ($i=0; $i < count($request->attr); $i++) { 
+        for ($i=0; $i < count($request->attr); $i++) {
             if($request->attr[$i] != null) {
                 $type = json_decode($request->attr[$i]);
                 ProductSupplier::create([
@@ -181,7 +181,7 @@ class ProductController extends Controller
             'transports' => Transport::all(),
             'products' => Product::with('types', 'productSuppliers')->get(),
             'typeProducts' => Type::where('level', Type::PRODUCT)->get(),
-            'customer' => Customer::with('type', 'district.province')->findOrFail($id),
+            'customer' => Customer::with('type', 'district.province.districts')->findOrFail($id),
         ];
         return view('product.export_for_customer', $data);
     }
@@ -327,7 +327,7 @@ class ProductController extends Controller
         $stt = $request->stt;
         $product = Product::with('productSuppliers.type')->findOrFail($request->id);
         $productSuppliers = $product->productSuppliers()->get()->unique('type_id');
-        
+
         return view('product.select_type', compact('productSuppliers', 'stt'));
     }
 }
