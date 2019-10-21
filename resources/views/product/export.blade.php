@@ -33,7 +33,7 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Tỉnh thành</label>
                         <div class="col-lg-7">
-                            <select class="form-control" required onchange="getDistricts($(this).val())" name="province_id">
+                            <select class="form-control select2" required onchange="getDistricts($(this).val())" name="province_id">
                                 <option value="" class="d-none" disabled selected>Chọn tỉnh..</option>
                                 @foreach($provinces as $province)
                                     <option value="{{ $province->id }}">{{ $province->name }}</option>
@@ -44,11 +44,9 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Quận huyện</label>
                         <div class="col-lg-7">
-                            <select class="form-control" required name="district_id" id="district">
-                                <option value="" class="d-none" disabled selected>Chọn huyện..</option>
-                                @foreach($provinces->first()->districts as $districts)
-                                    <option value="{{ $districts->id }}">{{ $districts->name }}</option>
-                                @endforeach
+                            <select class="form-control select2" required name="district_id" id="district">
+                                <option value=""></option>
+                                <option value="" disabled>Chọn tỉnh thành trước</option>
                             </select>
                         </div>
                     </div>
