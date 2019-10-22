@@ -400,9 +400,7 @@
                 <td id="selectType${stt}">
                     <select class="form-control select2" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
                         <option value=""></option>
-                        @foreach($typeProducts as $typeProduct)
-                        <option value="{{ $typeProduct }}">{{ $typeProduct->code }}</option>
-                        @endforeach
+                        <option value="" disabled>Chọn mã trước</option>
                     </select>
                 </td>
                 <td id="nameProduct${stt}"></td>

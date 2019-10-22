@@ -184,8 +184,8 @@
                             <td id="selectType{{ $i }}">
                                 <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                     <option value=""></option>
-                                    @foreach($typeProducts as $typeProduct)
-                                        <option value="{{ $typeProduct }}" {{ ($orderProduct->type->id == $typeProduct->id) ? 'selected' : '' }}>{{ $typeProduct->code }}</option>
+                                    @foreach($orderProduct->product->productSuppliers->unique('type_id') as $productSupplier)
+                                        <option value="{{ $productSupplier->type_id }}" {{ ($orderProduct->type_id == $productSupplier->type_id) ? 'selected' : '' }}>{{ $productSupplier->type_code }}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -213,9 +213,7 @@
                         <td id="selectType{{ $i }}">
                             <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                 <option value=""></option>
-                                @foreach($typeProducts as $typeProduct)
-                                    <option value="{{ $typeProduct }}">{{ $typeProduct->code }}</option>
-                                @endforeach
+                                <option value="" disabled>Chọn mã trước</option>
                             </select>
                         </td>
                         <td id="nameProduct{{ $i }}"></td>
