@@ -27,7 +27,7 @@ class OrderController extends Controller
     public function report(Request $request)
     {
         $array_customer_id = [];
-        $orders = Order::with('orderProducts.product', 'customer.district.province', 'type', 'orderProducts.type', 'orderSource')
+        $orders = Order::with('orderProducts.product', 'customer.district.province', 'type', 'orderProducts.type', 'orderSource', 'customer.orders')
             ->orderByDesc('updated_at');
 
         if (!$request->search) {
@@ -64,7 +64,7 @@ class OrderController extends Controller
             $order_source_id = $request->order_source_id;
             $orders = $orders->where('order_source_id', $order_source_id);
         }
-        
+
         if ($request->start_date) {
             $orders->where('created_at', '>=', $request->start_date);
         }

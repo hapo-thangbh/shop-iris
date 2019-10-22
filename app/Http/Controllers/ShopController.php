@@ -41,28 +41,41 @@ class ShopController extends Controller
         $successSend = Order::whereHas('status', function ($query) {
             $query->where('name', 'Hoàn thành')->where('type', Status::ORDER);
         })->where('created_at', '>=', date('Y-m-01'));
+        $fail = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Hoàn')->where('type', Status::ORDER);
+        })->where('created_at', '>=', date('Y-m-01'));
         $respon = [
             'titlePage' => 'Doanh thu cửa hàng',
             'revenues' => [
                 'waitSend' => $waitSend->sum('total') + $waitSend->sum('ship_fee') - $waitSend->sum('discount'),
                 'send' => $send->sum('total') + $send->sum('ship_fee') - $send->sum('discount'),
                 'successSend' => $successSend->sum('total') + $successSend->sum('ship_fee') - $successSend->sum('discount'),
+                'fail' => $fail->sum('total') + $fail->sum('ship_fee') - $fail->sum('discount'),
             ],
             'orders' => [
                 'waitSend' => $waitSend->count(),
                 'send' => $send->count(),
                 'successSend' => $successSend->count(),
+                'fail' => $fail->count(),
             ],
             'importPrice' => [
                 'waitSend' => $waitSend->get()->sum('sum_import_price'),
                 'send' => $send->get()->sum('sum_import_price'),
                 'successSend' => $successSend->get()->sum('sum_import_price'),
+                'fail' => $fail->get()->sum('sum_import_price'),
             ],
             'totalImport' => ProductSupplier::all()->where('created_at', '>=', date('Y-m-01'))->sum('total_import_price'),
             'totalMoney' => Product::all()->sum('total_money'),
             'totalNumber' =>  ProductSupplier::all()->sum('number') - OrderProduct::whereHas('order', function($query) {
                     $query ->whereIn('status_id', [2, 3, 5]);
-                })->get()->sum('number')
+                })->get()->sum('number'),
+            'reportOrderSources' => [
+                'orderSources' => OrderSource::with('orders.status')->get(),
+                'waitSend' => $waitSend->get(),
+                'send' => $send->get(),
+                'successSend' => $successSend->get(),
+                'fail' => $fail->get(),
+            ]
         ];
         return view('report.store_sale', $respon);
     }
@@ -78,17 +91,22 @@ class ShopController extends Controller
         $successSend = Order::whereHas('status', function ($query) {
             $query->where('name', 'Hoàn thành')->where('type', Status::ORDER);
         });
+        $fail = Order::whereHas('status', function ($query) {
+            $query->where('name', 'Hoàn')->where('type', Status::ORDER);
+        });
         $productSuppliers = ProductSupplier::all()->whereBetween('created_at', [$request->start_date, Carbon::parse($request->end_date)->addDays(1)]);
         if ($request->start_date) {
             $waitSend->where('created_at', '>=', $request->start_date);
             $send->where('created_at', '>=', $request->start_date);
             $successSend->where('created_at', '>=', $request->start_date);
+            $fail->where('created_at', '>=', $request->start_date);
         }
         if ($request->end_date) {
             $time = Carbon::parse($request->end_date)->addDays(1);
             $waitSend->where('created_at', '<=', $time);
             $send->where('created_at', '<=', $time);
             $successSend->where('created_at', '<=', $time);
+            $fail->where('created_at', '<=', $time);
         }
         $respon = [
             'titlePage' => 'Doanh thu cửa hàng',
@@ -96,16 +114,19 @@ class ShopController extends Controller
                 'waitSend' => $waitSend->sum('total') + $waitSend->sum('ship_fee') - $waitSend->sum('discount'),
                 'send' => $send->sum('total') + $send->sum('ship_fee') - $send->sum('discount'),
                 'successSend' => $successSend->sum('total') + $successSend->sum('ship_fee') - $successSend->sum('discount'),
+                'fail' => $fail->sum('total') + $fail->sum('ship_fee') - $fail->sum('discount'),
             ],
             'orders' => [
                 'waitSend' => $waitSend->count(),
                 'send' => $send->count(),
                 'successSend' => $successSend->count(),
+                'fail' => $fail->count(),
             ],
             'importPrice' => [
                 'waitSend' => $waitSend->get()->sum('sum_import_price'),
                 'send' => $send->get()->sum('sum_import_price'),
                 'successSend' => $successSend->get()->sum('sum_import_price'),
+                'fail' => $fail->get()->sum('sum_import_price'),
             ],
             'totalImport' => $productSuppliers->sum('total_import_price'),
         ];

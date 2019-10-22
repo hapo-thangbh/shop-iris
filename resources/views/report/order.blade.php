@@ -90,12 +90,8 @@
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-phone" aria-hidden="true"></i>
                             <span onclick="clickPhone($(this).text());" class="order-phone
-                                @if(!empty($array_customer_id))
-                                    @foreach($array_customer_id as $customer_id)
-                                        @if($order->customer_id == $customer_id)
-                                            text-success
-                                        @endif
-                                    @endforeach
+                                @if($order->customer->orders->count() > 1)
+                                text-success
                                 @endif
                             ">{{ $order->customer->phone }}</span>
                         </div>

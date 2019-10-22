@@ -43,7 +43,7 @@
                         <label for="" class="col-lg-5 col-form-label">Quận huyện</label>
                         <div class="col-lg-7">
                             <select class="form-control" name="district_id" id="district">
-                                @foreach($provinces->first()->districts as $district)
+                                @foreach($customer->district->province->districts as $district)
                                     <option value="{{ $district->id }}" {{ ($district->id == $customer->district->id) ? 'selected' : '' }}>
                                         {{ $district->name }}
                                     </option>
@@ -128,7 +128,7 @@
                         <div class="col-lg-8">
                             <select class="form-control" id="" required name="status_id">
                                 <option value="" class="d-none" disabled selected>Chọn trạng thái..</option>
-                                @foreach($statuses as $key => $status)
+                                @foreach($statuses->orderBy('name') as $key => $status)
                                     <option value="{{ $status->id }}" @if(request('is_default') && $key == 4) selected @endif>{{ $status->name }}</option>
                                 @endforeach
                             </select>
