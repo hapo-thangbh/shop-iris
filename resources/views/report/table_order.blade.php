@@ -185,7 +185,8 @@
                                 <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                     <option value=""></option>
                                     @foreach($orderProduct->product->productSuppliers->unique('type_id') as $productSupplier)
-                                        <option value="{{ $productSupplier->type_id }}" {{ ($orderProduct->type_id == $productSupplier->type_id) ? 'selected' : '' }}>{{ $productSupplier->type_code }}</option>
+                                        <option value="{{ $productSupplier->type }}" {{ ($orderProduct->type_id == $productSupplier->type_id) ? 'selected' : '' }}>{{ $productSupplier->type_code }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </td>
