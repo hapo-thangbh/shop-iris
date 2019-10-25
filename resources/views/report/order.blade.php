@@ -12,7 +12,7 @@
                 <div class="mx-1 my-1">
                     <select class="form-control select2" name="status_id">
                         <option value="">Trạng thái (tất cả)</option>
-                        @foreach($statuses as $status)
+                        @foreach($statuses->sortBy('name') as $status)
                             <option value="{{ $status->id }}" {{ $status->id == $request->status_id ? 'selected' : '' }}>
                                 {{ $status->name }}
                             </option>
@@ -60,7 +60,7 @@
 
         <div class="row w-100">
             <div class="col-12 form-inline">
-            @foreach($statuses as $status)
+            @foreach($statuses->sortBy('name') as $status)
                     <form action="{{ route('report.order') }}" method="GET">
                         <input type="hidden" name="search" value="1">
                         <input type="hidden" name="status_id" value="{{ $status->id }}">
@@ -130,13 +130,13 @@
                         <div class="pt-2 pb-2 form-inline">
                             <span>{{ date_format($order->created_at,"d/m/Y") }}</span> <span class="ml-2 mr-2">{{ date_format($order->created_at,"H:i") }}</span>
                             <select class="form-control d-inline-block" onchange="editStatus($(this).val(), {{ $order->id }})">
-                                @foreach($statuses as $status)
+                                @foreach($statuses->sortBy('name') as $status)
                                     <option value="{{ $status->id }}" {{ ($order->status_id == $status->id) ? 'selected' : '' }}>
                                         {{ $status->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            <a class="mt-2 fa fa-print text-dark pl-2" aria-hidden="true" href="{{ route('print_order', $order->id) }}"></a>
+                            <a target="_blank" class="mt-2 fa fa-print text-dark pl-2" aria-hidden="true" href="{{ route('print_order', $order->id) }}"></a>
                             <i class="mt-2 mr-2 fas fa-pen pl-2 cursor-pointer" aria-hidden="true"  onclick="getInfoOrder({{ $order->id }})"></i>
                             <a class="mt-2 fas fa-plus text-dark pl-2" aria-hidden="true" href="{{ route('product.export_for_customer', $order->customer->id) }}"></a>
                         </div>
