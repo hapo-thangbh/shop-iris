@@ -95,12 +95,15 @@
                                 @endif
                             ">{{ $order->customer->phone }}</span>
                         </div>
+                        {{-- {{ dd($order->orderProducts) }} --}}
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-shopping-basket" aria-hidden="true"></i>
                             <span class="attribute-product">
-                                {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }}
-                                ({{ $order->orderProducts[0]->number }});
-                                <img src="{{ asset('storage/'.$order->orderProducts[0]->product->image) }}">
+                                @if ($order->orderProducts->count() > 0)
+                                    {{ $order->orderProducts[0]->product->code.$order->orderProducts->first()->type->code }}
+                                    ({{ $order->orderProducts[0]->number }});
+                                    <img src="{{ asset('storage/'.$order->orderProducts[0]->product->image) }}">
+                                @endif
                             </span>
 
                             <?php $check = 0 ?>

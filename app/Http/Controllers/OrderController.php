@@ -184,6 +184,21 @@ class OrderController extends Controller
             ]
         );
 
+        $total = 0;
+        OrderProduct::where('order_id', $id)->delete();
+        foreach ($request->product as $product) {
+            if ($product['name'] && $product['type']) {
+                $total += json_decode($product['name'])->export_prince * $product['number'];
+                OrderProduct::create([
+                    'order_id' => $id,
+                    'product_id' => json_decode($product['name'])->id,
+                    'number' => $product['number'],
+                    'price' => json_decode($product['name'])->export_prince,
+                    'type_id' => json_decode($product['type'])->id,
+                ]);
+            }
+        }
+
         $order = Order::findOrFail($id)->update([
             'code' => $request->order_code,
             'discount' => $request->discount,
@@ -194,22 +209,10 @@ class OrderController extends Controller
             'type_id' => $request->type_order_id,
             'status_id' => $request->status_id,
             'transport_id' => $request->transport_id,
-            'total' => $request->total,
+            'total' => $total,
             'customer_id' => $request->customer_id,
             'order_source_id' => $request->order_source_id,
         ]);
-        OrderProduct::where('order_id', $id)->delete();
-        foreach ($request->product as $product) {
-            if ($product['name'] && $product['type']) {
-                OrderProduct::create([
-                    'order_id' => $id,
-                    'product_id' => json_decode($product['name'])->id,
-                    'number' => $product['number'],
-                    'price' => json_decode($product['name'])->export_prince,
-                    'type_id' => json_decode($product['type'])->id,
-                ]);
-            }
-        }
         return redirect()->back();
     }
 
