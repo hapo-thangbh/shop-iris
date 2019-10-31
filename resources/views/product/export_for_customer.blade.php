@@ -30,7 +30,7 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Tỉnh thành</label>
                         <div class="col-lg-7">
-                            <select class="form-control" onchange="getDistricts($(this).val())" name="province_id">
+                            <select class="form-control select2" onchange="getDistricts($(this).val())" name="province_id">
                                 @foreach($provinces as $province)
                                     <option value="{{ $province->id }}" {{ ($province->id == $customer->district->province->id) ? 'selected' : '' }}>
                                         {{ $province->name }}
@@ -42,7 +42,7 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Quận huyện</label>
                         <div class="col-lg-7">
-                            <select class="form-control" name="district_id" id="district">
+                            <select class="form-control select2" name="district_id" id="district">
                                 @foreach($customer->district->province->districts as $district)
                                     <option value="{{ $district->id }}" {{ ($district->id == $customer->district->id) ? 'selected' : '' }}>
                                         {{ $district->name }}
@@ -163,6 +163,7 @@
                             <th style="width: 100px">Số lượng</th>
                             <th>Giá bán</th>
                             <th>Thành tiền</th>
+                            <td></td>
                         </tr>
                         </thead>
                         <tbody id="order">
@@ -191,6 +192,7 @@
                             <td class="text-center" id="price0">
                             </td>
                             <td class="text-center" id="money0"></td>
+                            <td class="text-center"><button type="button" id="delete0" class="btn-del-attr btn bg-danger" onclick="deleteOrder(0);">Xóa</button></td>
                         </tr>
                         </tbody>
                         <tr>
@@ -198,22 +200,27 @@
                                 <button type="button" class="btn btn-danger" onclick="addOrder()">+</button>
                             </td>
                             <td colspan="6" class="text-center text-danger"><h4>. . .</h4></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Cộng tiền hàng</th>
                             <td class="text-center" id="sumPrice">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Chiết khấu</th>
                             <td class="text-center" id="sale">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Phí vận chuyển</th>
                             <td class="text-center" id="ship">0</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <th colspan="6">Tổng cộng</th>
                             <td class="text-center" id="total">0</td>
+                            <td></td>
                         </tr>
                     </table>
                 </div>
@@ -240,7 +247,7 @@
                     id: id
                 },
                 success: function (respon) {
-                    let text = '';
+                    let text = '<option value=""></option>';
                     $.each( respon.districts, function( key, value ) {
                         text += `<option value="${value.id}">${value.name}</option>`;
                     });
@@ -262,6 +269,8 @@
                 <td class="text-center font-weight-bold">${stt + 1}</td>
                 <td>
                     <select class="form-control select2" id="" name="product[${stt}][name]" onchange="setProduct(${stt});  setType(${stt})">
+                    <option value=""></option>
+                    option
                         @foreach($products as $product)
                 <option value="{{ $product }}">{{ $product->code }}</option>
                         @endforeach
@@ -269,9 +278,7 @@
             </td>
             <td id="selectType${stt}">
                     <select class="form-control select2" id="" name="product[${stt}][type]" onchange="setProduct(${stt})">
-                    @foreach($typeProducts as $typeProduct)
-                <option value="{{ $typeProduct }}">{{ $typeProduct->code }}</option>
-                    @endforeach
+                    
                 </select>
             </td>
             <td id="nameProduct${stt}"></td>
@@ -281,11 +288,23 @@
             <td class="text-center" id="price${stt}">
             </td>
             <td class="text-center" id="money${stt}"></td>
+            <td class="text-center"><button type="button" id="delete${stt}" class="btn-del-attr btn bg-danger" onclick="deleteOrder(${stt});">Xóa</button></td>
         </tr>`;
             $('#order').append(text);
             setProduct(stt);
             $(".select2").select2({
             });
+        }
+
+        function deleteOrder(id) {
+            var sum_old = parseInt($(`#sumPrice`).html());
+            var money = parseInt($(`#money${parseInt(id)}`).html());
+            var tong = parseInt(sum_old-money);
+            var tongcong_old = parseInt($(`#total`).html());
+            var tongcong = parseInt(tongcong_old-money);
+            $('#sumPrice').html(tong);
+            $('#total').html(tongcong);
+            $(`#delete${id}`).closest('tr').remove();
         }
 
         function setType(id) {
@@ -319,7 +338,18 @@
                 let price = JSON.parse($(`select[name="product[${id}][name]"]`).val()).export_prince * $(`input[name="product[${id}][number]"]`).val();
                 $(`#money${id}`).text(price);
                 for (let i = 0; i <= stt; i++) {
-                    let price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    // let price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+
+                    if ($(`select[name="product[${i}][name]"]`).val())
+                    {
+                        price = JSON.parse($(`select[name="product[${i}][name]"]`).val()).export_prince * $(`input[name="product[${i}][number]"]`).val();
+                    }
+                    else{
+                        price = parseInt('0');
+                    }
+
+
+
                     sumPrice += price;
                 }
                 $('#sumPrice').text(sumPrice);

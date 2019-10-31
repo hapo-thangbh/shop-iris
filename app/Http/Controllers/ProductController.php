@@ -187,6 +187,7 @@ class ProductController extends Controller
 
     public function exportStore(Request $request)
     {
+
         $auth = Auth::user();
         $customer = Customer::updateOrCreate(
             [
@@ -200,6 +201,10 @@ class ProductController extends Controller
                 'type_id' => $request->type_customer_id,
             ]
         );
+        $total = 0;
+        foreach ($request->product as $product) {
+            $total += json_decode($product['name'])->export_prince * $product['number'];
+        }
         $order = Order::create([
             'code' => $request->order_code,
             'discount' => $request->sumSale,
@@ -210,12 +215,11 @@ class ProductController extends Controller
             'type_id' => $request->type_order_id,
             'status_id' => $request->status_id,
             'transport_id' => $request->transport_id,
-            'total' => $request->total,
+            'total' => $total,
             'customer_id' => $customer->id,
             'user_id' => $auth->id,
             'order_source_id' => $request->order_source_id,
         ]);
-        $data = [];
         foreach ($request->product as $product) {
             OrderProduct::create([
                 'order_id' => $order->id,
@@ -225,6 +229,7 @@ class ProductController extends Controller
                 'type_id' => json_decode($product['type'])->id,
             ]);
         }
+        $data = [];
 
         if ($request->checkPrint) {
             return redirect()->route('print_order', $order->id);
