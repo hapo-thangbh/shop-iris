@@ -230,10 +230,10 @@
         function clickPhone(phone) {
             var string = window.location.toString();
             if(string.indexOf("?") == -1) {
-                window.location.href = location + '?phone=' + phone;
+                window.location.href = location + '?code=' + phone;
             }
             else {
-                window.location.href = location + '&phone=' + phone;
+                window.location.href = location + '&code=' + phone;
             }
         }
         let stt = 0;
