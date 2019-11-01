@@ -89,11 +89,13 @@
                         </div>
                         <div class="pt-2 pb-2">
                             <i class="mr-2 fa fa-phone" aria-hidden="true"></i>
-                            <span onclick="clickPhone($(this).text());" class="order-phone
+                            <a href="{{ route('report.order') . '?code=' . $order->customer->phone }}" class="
                                 @if($order->customer->orders->count() > 1)
                                 text-success
+                                @else
+                                text-black
                                 @endif
-                            ">{{ $order->customer->phone }}</span>
+                            ">{{ $order->customer->phone }}</a>
                         </div>
                         {{-- {{ dd($order->orderProducts) }} --}}
                         <div class="pt-2 pb-2">
