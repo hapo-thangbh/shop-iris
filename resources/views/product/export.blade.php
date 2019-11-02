@@ -272,7 +272,6 @@
                     if ((response.data).length > 0){
                         $.each( response.data, function( key, value ) {
                             var customer_id = value['id'];
-                            console.log(customer_id);
                             Swal.fire({
                                 title: 'Đây là khách hàng cũ của bạn !',
                                 text: "Tự động điền đầy đủ thông tin khách hàng",
@@ -280,10 +279,14 @@
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
-                                confirmButtonText: 'Yes, Fill It !'
+                                confirmButtonText: 'Đồng ý',
+                                cancelButtonText: 'Không'
                             }).then((result) => {
                                 if (result.value) {
                                     window.location.href = "/product/export/" + customer_id;
+                                }
+                                else if (result.dismiss === Swal.DismissReason.cancel) {
+                                    window.location.reload();
                                 }
                             })
                         });

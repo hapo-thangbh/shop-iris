@@ -348,7 +348,6 @@ class ProductController extends Controller
 
     public function checkCustomer(Request $request)
     {
-        $response = array();
         $validator = Validator::make($request->all(),
             [
                'phone'  => 'required|numeric'
@@ -363,10 +362,6 @@ class ProductController extends Controller
         if (!$result->count()){
             return $this->errorResponse([], [], 'Empty data');
         }
-        foreach ($result as $key => $value){
-            $response[$key] = $value;
-            $response[$key]['district_id'] = District::getDistrict($value->district_id);
-        }
-        return $this->successResponse($response,  "Get data successful");
+        return $this->successResponse($result,  "Get data successful");
     }
 }
