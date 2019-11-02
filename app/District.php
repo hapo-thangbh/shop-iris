@@ -20,11 +20,4 @@ class District extends Model
     {
         return $this->hasMany(Customer::class);
     }
-
-    public static function getDistrict($id)
-    {
-        return District::where('id', $id)
-            ->select('id as district_id', 'name as district_name', 'province_id')
-            ->first();
-    }
 }
