@@ -9,6 +9,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('api/v1/check-customer', 'ProductController@checkCustomer')->name('check_customer');
 Route::get('storage/{filename}', function ($filename)
 {
     $path = storage_path('app/public/' . $filename);
@@ -61,6 +62,8 @@ Route::prefix('')->middleware('auth')->group(function () {
         Route::post('import-product','ProductController@importProduct')->name('import-product');
         Route::get('search-warehouse','ProductController@searchWarehouse')->name('search-warehouse');
         Route::put('update/{id}','ProductController@update')->name('update');
+        //check isset customer
+//        Route::get('api/v1/check-customer', 'ProductController@checkCustomer');
     });
     Route::prefix('customer')->name('customer.')->group(function () {
         Route::post('edit-address', 'CustomerController@editAddress')->name('edit_address');
