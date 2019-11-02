@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Customer;
+use App\District;
 use App\Http\Requests\Product\Store;
 use App\Order;
 use App\OrderProduct;
@@ -18,6 +19,7 @@ use App\ProductSupplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -342,5 +344,29 @@ class ProductController extends Controller
         $name = Type::findOrFail($request->id)->name;
         
         return view('product.input_type_name', compact('name'));
+    }
+
+    public function checkCustomer(Request $request)
+    {
+        $response = array();
+        $validator = Validator::make($request->all(),
+            [
+               'phone'  => 'required|numeric'
+            ]);
+        if ($validator->fails()){
+            return $this->errorResponse(self::BAD_REQUEST, [], $validator->errors()->all());
+        }
+        $phone = $request->input('phone');
+        $result = Customer::where('phone', $phone)
+            ->select('id', 'name', 'address', 'link', 'district_id', 'type_id')
+            ->get();
+        if (!$result->count()){
+            return $this->errorResponse([], [], 'Empty data');
+        }
+        foreach ($result as $key => $value){
+            $response[$key] = $value;
+            $response[$key]['district_id'] = District::getDistrict($value->district_id);
+        }
+        return $this->successResponse($response,  "Get data successful");
     }
 }
