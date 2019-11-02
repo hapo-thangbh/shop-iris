@@ -72,22 +72,22 @@
                     <?php $stt = 1; ?>
                     @foreach ($products as $product)
                         <tbody>
-                        <tr class="text-center border-bottom border-danger">
+                        <tr class="border-bottom border-danger">
                             <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center font-weight-bold">{{ $stt++ }}</td>
-                            <td rowspan="{{ $product->productSuppliers->count() }}"><img style="width: 100px; height: auto" src="{{ asset('storage/' . $product->image) }}"></td>
-                            <td rowspan="{{ $product->productSuppliers->count() }}">{{ $product->code }}</td>
+                            <td class="text-center" rowspan="{{ $product->productSuppliers->count() }}"><img style="width: 100px; height: auto" src="{{ asset('storage/' . $product->image) }}"></td>
+                            <td class="text-center" rowspan="{{ $product->productSuppliers->count() }}">{{ $product->code }}</td>
                             <td rowspan="{{ $product->productSuppliers->count() }}">{{ $product->name }}</td>
                             @if(auth()->user()->level == 1)
                             <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->import_prince) }}</td>
                             @endif
                             <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->export_prince) }}</td>
                             @php($productSupplierFirst = $product->productSuppliers->sortBy('type_code')->first())
-                            <td class="text-center">
+                            <td>
                                 @if($product->productSuppliers->count())
                                     {{ $productSupplierFirst->type_code }}
                                 @endif
                             </td>
-                            <td class="text-center">
+                            <td>
                                 @if($product->productSuppliers->count())
                                 {{ $productSupplierFirst->type_name }}
                                 @endif
@@ -108,18 +108,18 @@
                                 @endif
                             </td>
                             @if(auth()->user()->level == 1)
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }}, {{ $product->productSuppliers->unique('type_id') }}, {{ $typeProducts }})">Sửa</button></td>
+                            <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }}, {{ $product->productSuppliers->unique('type_id') }}, {{ $typeProducts }})">Sửa</button></td>
                             @endif
                         </tr>
                         <?php $check = 0 ?>
                         <?php $checkCode = [] ?>
                         @foreach ($product->productSuppliers->unique('type_id')->sortBy('type_code') as $productSupplier)
                             @if($check)
-                                <tr class="border-bottom border-danger text-center">
+                                <tr class="border-bottom border-danger">
                                     <td>
                                         {{ $productSupplier->type_code }}
                                     </td>
-                                    <td class="text-center">
+                                    <td>
                                         {{ $productSupplier->type_name }}
                                     </td>
                                     <td class="text-center">

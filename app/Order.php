@@ -60,7 +60,8 @@ class Order extends Model
 
     public function getSumProductAttribute()
     {
-        return $this->orderProducts->count();
+        // return $this->orderProducts->count();
+        return $this->orderProducts->sum('number');
     }
 
     public function getSumImportPriceAttribute()
