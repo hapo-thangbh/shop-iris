@@ -96,3 +96,6 @@ html, body, .wrapper {
 .cursor-pointer {
     cursor: pointer;
 }
+.main-sidebar {
+    z-index: 1000 !important;
+}

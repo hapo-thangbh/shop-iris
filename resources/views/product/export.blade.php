@@ -15,25 +15,25 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Khách hàng</label>
                         <div class="col-lg-7">
-                            <input type="text" class="form-control" id="" name="customer_name">
+                            <input type="text" class="form-control" id="customer_name" name="customer_name">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Điện thoại</label>
                         <div class="col-lg-7">
-                            <input type="number" class="form-control" id="" name="customer_phone">
+                            <input type="number" class="form-control" id="customer_phone" name="customer_phone">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Địa chỉ</label>
                         <div class="col-lg-7">
-                            <textarea class="form-control" id="" rows="3" name="customer_address"></textarea>
+                            <textarea class="form-control" id="customer_address" rows="3" name="customer_address"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Tỉnh thành</label>
                         <div class="col-lg-7">
-                            <select class="form-control select2" required onchange="getDistricts($(this).val())" name="province_id">
+                            <select class="form-control select2" required onchange="getDistricts($(this).val())" id="customer_province" name="province_id">
                                 <option value="" class="d-none" disabled selected>Chọn tỉnh..</option>
                                 @foreach($provinces as $province)
                                     <option value="{{ $province->id }}">{{ $province->name }}</option>
@@ -66,7 +66,7 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Loại KH</label>
                         <div class="col-lg-7">
-                            <select class="form-control" required id="" name="type_customer_id">
+                            <select class="form-control" required id="customer_type" name="type_customer_id">
                                 <option value="" class="d-none" disabled selected>Chọn loại KH..</option>
                                 @foreach($types as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -77,7 +77,7 @@
                     <div class="form-group row">
                         <label for="" class="col-lg-5 col-form-label">Link thông tin KH</label>
                         <div class="col-lg-7">
-                            <input type="text" class="form-control" id="" name="url_info">
+                            <input type="text" class="form-control" id="customer_link" name="url_info">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -128,7 +128,7 @@
                         <div class="col-lg-8">
                             <select class="form-control" id="" required name="status_id">
                                 <option value="" class="d-none" disabled selected>Chọn trạng thái..</option>
-                                @foreach($statuses->sortBy('name') as $status)
+                                @foreach($statuses->sortBy('name_sort') as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                                 @endforeach
                             </select>
@@ -258,6 +258,46 @@
                 }
             })
         }
+        //check customer_phone
+        $('#customer_phone').blur(function () {
+            let phone = $('#customer_phone').val();
+            $.ajax({
+                url: "{{ route('check_customer') }}",
+                type: "GET",
+                data: {
+                    phone: phone
+                },
+                success: function (response) {
+                    console.log(response);
+                    if ((response.data).length > 0){
+                        $.each( response.data, function( key, value ) {
+                            var customer_id = value['id'];
+                            Swal.fire({
+                                title: 'Đây là khách hàng cũ của bạn !',
+                                text: "Tự động điền đầy đủ thông tin khách hàng",
+                                type: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Đồng ý',
+                                cancelButtonText: 'Không'
+                            }).then((result) => {
+                                if (result.value) {
+                                    window.location.href = "/product/export/" + customer_id;
+                                }
+                                else if (result.dismiss === Swal.DismissReason.cancel) {
+                                    window.location.reload();
+                                }
+                            })
+                        });
+                    }
+                },
+                errors: function () {
+                    alert('Customer !isset')
+                }
+            })
+        });
+        //end check customer-phone
 
         let $products = JSON.parse(`<?= json_encode($products) ?>`);
         let $typeProducts = JSON.parse('<?= json_encode($typeProducts) ?>');

@@ -130,7 +130,7 @@
                     <div class="col-lg-8">
                         <select class="form-control" id="" required name="status_id">
                             <option value="" class="d-none" disabled selected>Chọn trạng thái..</option>
-                            @foreach($statuses->sortBy('name') as $status)
+                            @foreach($statuses->sortBy('name_sort') as $status)
                                 <option value="{{ $status->id }}" {{ $order->status_id == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
                             @endforeach
                         </select>

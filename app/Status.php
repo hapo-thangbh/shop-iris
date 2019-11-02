@@ -27,4 +27,13 @@ class Status extends Model
     {
         $orders = $this->orders();
     }
+
+    public function getNameSortAttribute()
+    {
+        $name = $this->name;
+        if ($name == 'Đã gửi') {
+            $name = 'Dã gửi';
+        }
+        return $name;
+    }
 }
