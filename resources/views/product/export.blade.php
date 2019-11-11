@@ -6,9 +6,9 @@
             @csrf
             <div class="row justify-content-center">
                 <div class="col-12 mb-3">
-                    <h1 class="title">Thêm đơn hàng
+                    <h1 class="title">THÊM ĐƠN HÀNG
                         <a href="{{ route('product.export_for_customer', $defaultInfo->id) . '?is_default=1' }}"
-                           class="float-right btn btn-danger set-info">Khách lẻ</a>
+                           class="float-right btn btn-danger set-info">CỬA HÀNG</a>
                     </h1>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-12">

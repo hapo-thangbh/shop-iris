@@ -168,7 +168,7 @@ class ShopController extends Controller
         });
         $fail = Order::whereHas('status', function ($query) {
             $query->where('name', 'Hoàn')->where('type', Status::ORDER);
-        })->where('created_at', '>=', date('Y-m-01'));
+        });
         if ($request->start_date) {
             $waitSend->where('created_at', '>=', $request->start_date);
             $send->where('created_at', '>=', $request->start_date);

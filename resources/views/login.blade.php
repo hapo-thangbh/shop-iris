@@ -15,7 +15,7 @@
     <div class="row justify-content-center mt-5">
         <div class=" col-12 col-md-6 col-lg-5 col-xl-4">
             <div class="card">
-                <h5 class="card-header w-100 text-center bg-danger text-white font-weight-bold">ĐĂNG NHẬP</h5>
+                <h6 class="card-header w-100 text-center bg-danger text-white font-weight-bold">ĐĂNG NHẬP</h6>
                 <div class="text-center text-danger mt-3">{{ $errors ? $errors->first() : '' }} {{ session('msg') ? session('msg') : '' }}</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -36,12 +36,13 @@
                                 <input required id="password" type="password" class="text-center form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password">
                             </div>
                         </div>
+                        <br>
 
 
                         <div class="form-group row mb-0">
-                            <div class="col-4 offset-4">
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-danger w-100">
-                                    ĐỒNG Ý
+                                    ĐĂNG NHẬP
                                 </button>
                             </div>
                         </div>

@@ -4,8 +4,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <h1 class="title mb-3 d-inline-block">Tổng hợp nhập hàng</h1>
-            </div>
+                    <h1 class="title  bg-danger text-white pl-2 py-1">TỔNG HỢP NHẬP HÀNG</h1>
+                </div>
         </div>
 
         <div class="row">

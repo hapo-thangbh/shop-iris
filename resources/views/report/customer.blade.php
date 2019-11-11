@@ -5,7 +5,7 @@
         <form class="w-100">
             <form class="row" action="{{ route('report.customer') }}">
                 <div class="col-12">
-                    <h1 class="title d-inline-block">Tìm kiếm</h1>
+                    <h1 class="title d-inline-block">DANH SÁCH KHÁCH HÀNG</h1>
                     <button type="submit" class="btn btn-danger col-4 col-md-2 mb-2 float-right">Tìm</button>
                     <input type="text" class="form-control col-12 col-md-4 mr-2 float-right" id="" name="phone" placeholder="Số điện thoại" value="{{ $request->phone }}">
                 </div>

@@ -2,13 +2,13 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row">
-            <h4 class="col-12">{{ $titlePage }}</h4>
-        </div>
+        <div class="col-12">
+                    <h2 class="title  bg-danger text-white pl-2 py-1">DANH MỤC SẢN PHẨM</h2>
+                </div>
         <div class="row">
             <form class="form-inline col-12 my-5" action="{{ route('add.store_category') }}" method="POST">
                 @csrf
-                <h5>Tên danh mục:</h5>
+                <h6>Tên danh mục:</h6>
                 <input required class="form-control w-50 mx-3" name="name">
                 <button type="submit" class="btn btn-danger">Thêm</button>
             </form>
