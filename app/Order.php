@@ -68,4 +68,8 @@ class Order extends Model
     {
         return $this->orderProducts->sum('total_import_price');
     }
+    public function getProvinceIdAttribute()
+    {
+        return $this->customer->district->province_id;
+    }
 }

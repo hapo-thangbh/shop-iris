@@ -36,6 +36,7 @@
         <div class="row" id="table3">
             @include('table_store_info_3', [
                 'reportOrderSources' => $reportOrderSources,
+                'provinces' => $provinces
             ])
         </div>
 

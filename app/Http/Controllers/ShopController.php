@@ -10,6 +10,7 @@ use App\Product;
 use App\ProductSupplier;
 use App\Shop;
 use App\Status;
+use App\Province;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -189,7 +190,8 @@ class ShopController extends Controller
                 'send' => $send->get(),
                 'successSend' => $successSend->get(),
                 'fail' => $fail->get(),
-            ]
+            ],
+            'provinces' => Province::all(),
         ];
         return view('table_store_info_3', $respon)->render();
     }

@@ -11,6 +11,7 @@ use App\ProductSupplier;
 use App\Status;
 use App\Type;
 use App\User;
+use App\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -65,7 +66,8 @@ class UserController extends Controller
                         'send' => $send->get(),
                         'successSend' => $successSend->get(),
                         'fail' => $fail->get(),
-                    ]
+                    ],
+                    'provinces' => Province::all(),
                 ];
                 return view('report.store_sale', $respon);
             }
