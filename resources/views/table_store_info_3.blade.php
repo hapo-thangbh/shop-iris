@@ -67,14 +67,15 @@
         </table>
     </div>
     <div class="col-3 rounded" style="height: 104px; overflow-y: scroll; ">
-        <table class="table table-borderless text-white" style="background-color: orange">
-            @foreach ($provinces as $province)
+        <table class="table table-borderless text-white bg-danger">
+            @php($pcs = orderProvinces($provinces, $send2, $successSend2))
+            @foreach ($pcs as $province)
                 <tr>
-                    <td class="border-bottom border-danger">{{ $province->name }}</td>
-                    <td class="text-center border-danger border-bottom">
+                    <td class="border-bottom border-white">{{ $province->name }}</td>
+                    <td class="text-center border-white border-bottom">
                         {{ number_format($send2->where('province_id', $province->id)->sum('total') + $send2->where('province_id', $province->id)->sum('ship_fee') - $send2->where('province_id', $province->id)->sum('discount') + $successSend2->where('province_id', $province->id)->sum('total') + $successSend2->where('province_id', $province->id)->sum('ship_fee') - $successSend2->where('province_id', $province->id)->sum('discount')) }}
                     </td>
-                    <td class="text-center border-danger border-bottom">
+                    <td class="text-center border-white border-bottom">
                         {{ number_format($send2->where('province_id', $province->id)->count() + $send2->where('province_id', $province->id)->count() - $send2->where('province_id', $province->id)->count() + $successSend2->where('province_id', $province->id)->count() + $successSend2->where('province_id', $province->id)->count() - $successSend2->where('province_id', $province->id)->count()) }}
                     </td>
                 </tr>

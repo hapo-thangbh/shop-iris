@@ -71,16 +71,17 @@
                     </tr>
                     <?php $stt = 1; ?>
                     @foreach ($products as $product)
+                        @php($rowSpan = $product->productSuppliers->count() + 1)
                         <tbody>
                         <tr class="border-bottom border-danger">
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center font-weight-bold">{{ $stt++ }}</td>
-                            <td class="text-center" rowspan="{{ $product->productSuppliers->count() }}"><img style="width: 100px; height: auto" src="{{ asset('storage/' . $product->image) }}"></td>
-                            <td class="text-center" rowspan="{{ $product->productSuppliers->count() }}">{{ $product->code }}</td>
-                            <td rowspan="{{ $product->productSuppliers->count() }}">{{ $product->name }}</td>
+                            <td rowspan="{{ $rowSpan }}" class="text-center font-weight-bold">{{ $stt++ }}</td>
+                            <td class="text-center" rowspan="{{ $rowSpan }}"><img style="width: 100px; height: auto" src="{{ asset('storage/' . $product->image) }}"></td>
+                            <td class="text-center" rowspan="{{ $rowSpan }}">{{ $product->code }}</td>
+                            <td rowspan="{{ $rowSpan }}">{{ $product->name }}</td>
                             @if(auth()->user()->level == 1)
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->import_prince) }}</td>
+                            <td rowspan="{{ $rowSpan }}" class="text-center">{{ number_format($product->import_prince) }}</td>
                             @endif
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center">{{ number_format($product->export_prince) }}</td>
+                            <td rowspan="{{ $rowSpan }}" class="text-center">{{ number_format($product->export_prince) }}</td>
                             @php($productSupplierFirst = $product->productSuppliers->sortBy('type_code')->first())
                             <td>
                                 @if($product->productSuppliers->count())
@@ -108,12 +109,18 @@
                                 @endif
                             </td>
                             @if(auth()->user()->level == 1)
-                            <td rowspan="{{ $product->productSuppliers->count() }}" class="text-center align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }}, {{ $product->productSuppliers->unique('type_id') }}, {{ $typeProducts }})">Sửa</button></td>
+                            <td rowspan="{{ $rowSpan }}" class="text-center align-mid"><button type="button" class="btn btn-danger" onclick="editProduct({{ $product }}, {{ $categories }}, {{ $product->productSuppliers->unique('type_id') }}, {{ $typeProducts }})">Sửa</button></td>
                             @endif
                         </tr>
                         <?php $check = 0 ?>
                         <?php $checkCode = [] ?>
+                        @php($total1 = 0)
+                        @php($total2 = 0)
+                        @php($total3 = 0)
                         @foreach ($product->productSuppliers->unique('type_id')->sortBy('type_code') as $productSupplier)
+                            @php($total1 += $productSupplier->total_import - $productSupplier->total_export)
+                            @php($total2 += $productSupplier->total_export)
+                            @php($total3 += $productSupplier->total_wait_send)
                             @if($check)
                                 <tr class="border-bottom border-danger">
                                     <td>
@@ -135,6 +142,23 @@
                             @endif
                             <?php $check++ ?>
                         @endforeach
+                        <tr class="border-bottom border-danger">
+                            <td>
+
+                            </td>
+                            <td class="text-red">
+                                Tổng
+                            </td>
+                            <td class="text-center text-red">
+                                {{ $total1 }}
+                            </td>
+                            <td class="text-center text-red">
+                                {{ $total2 }}
+                            </td>
+                            <td class="text-center text-red">
+                                {{ $total3 }}
+                            </td>
+                        </tr>
                     </tbody>
                     @endforeach
                 </table>
@@ -306,7 +330,7 @@
 
             $('#edit').modal('show');
         }
-        
+
 
 
         function setType(id) {
@@ -326,7 +350,7 @@
                 })
             }
         }
-        
+
 
         let $typeProducts = JSON.parse('<?= json_encode($typeProducts) ?>');
         function addOrder() {

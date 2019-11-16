@@ -100,3 +100,6 @@ html, body, .wrapper {
 .main-sidebar {
     z-index: 1000 !important;
 }
+.text-red {
+    color: red !important;
+}
