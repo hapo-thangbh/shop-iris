@@ -103,3 +103,12 @@ html, body, .wrapper {
 .text-red {
     color: red !important;
 }
+@media (max-width: 991.98px) {
+    .sidebar-open #sidebar-overlay {
+        z-index: 1;
+    }
+}
+.modal-backdrop {
+    width: 100% !important;
+    height: 100% !important;
+}

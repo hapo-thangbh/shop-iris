@@ -9,6 +9,7 @@
     <title>{{ $titlePage }}</title>
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/adminlte.min.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/thanh.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
@@ -18,7 +19,7 @@
 <div id="app" class="wrapper">
     @guest
     @else
-    <nav class="main-header navbar navbar-expand bg-danger navbar-light border-bottom">
+    <nav class="main-header navbar navbar-expand bg-danger navbar-light border-bottom" style="z-index: 1">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
@@ -49,7 +50,7 @@
         </ul>
     </nav>
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4 h-100 bg-danger">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 h-100 bg-danger" style="z-index: 99">
         <!-- Brand Logo -->
         <h3 class="brand-text font-weight-light text-white ml-3 mt-2">IRIS</h3>
         <!-- Sidebar -->
@@ -67,7 +68,7 @@
                         </li>
                     @endif
                     <li class="nav-item">
-                        <a class="nav-link text-white @if(strpos(request()->url(), '/report/order')) active @endif" href ="{{ route('report.order') }}">Đơn hàng</a>
+                        <a class="nav-link text-white @if(strpos(request()->url(), '/report/order')) active @endif" href ="{{ route('report.order'). '?search=1&status_id=1' }}">Đơn hàng</a>
                     </li>
 
                     <li class="nav-item">
@@ -132,11 +133,13 @@
     </div>
 </div>
 
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-<script src="{{ asset('/js/admin-lte.js') }}"></script>
+<script src="{{ asset('/js/admin-lte.min.js') }}"></script>
 <script src="{{ asset('js/select2.min.js') }}" defer></script>
 <script src="{{ asset('js/thanh.js') }}" defer></script>
 <script>

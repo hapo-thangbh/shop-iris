@@ -184,7 +184,7 @@
                             <td id="selectType{{ $i }}">
                                 <select class="form-control select2" id="" name="product[{{ $i }}][type]" onchange="setProduct({{ $i }})">
                                     <option value=""></option>
-                                    @foreach($orderProduct->product->productSuppliers->unique('type_id') as $productSupplier)
+                                    @foreach($orderProduct->product->productSuppliers->sortBy('type_name')->unique('type_id') as $productSupplier)
                                         <option value="{{ $productSupplier->type }}" {{ ($orderProduct->type_id == $productSupplier->type_id) ? 'selected' : '' }}>{{ $productSupplier->type_code }}
                                         </option>
                                     @endforeach

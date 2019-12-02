@@ -57,6 +57,10 @@ class OrderController extends Controller
                 $query->where('name', 'LIKE', '%' . $code . '%');
             })->orwhereHas('customer', function ($query) use ($code){
                 $query->where('phone', 'LIKE', '%' . $code . '%');
+            })->orwhereHas('orderProducts.product', function ($query) use ($code){
+                    $query->where('code', 'LIKE', '%' . $code . '%');
+            })->orwhereHas('orderProducts.type', function ($query) use ($code){
+                $query->where('name', 'LIKE', '%' . $code . '%');
             });
         }
 
@@ -222,10 +226,6 @@ class OrderController extends Controller
      * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
-    {
-        //
-    }
 
     public function edit_order($id)
     {
@@ -290,5 +290,10 @@ class OrderController extends Controller
             ]);
         }
         return redirect()->route('report.order');
+    }
+
+    public function destroy($id)
+    {
+        Order::findOrFail($id)->delete();
     }
 }

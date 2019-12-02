@@ -75,6 +75,7 @@ Route::prefix('')->middleware('auth')->group(function () {
         Route::post('info', 'OrderController@info')->name('info');
         Route::get('edit-order/{id}', 'OrderController@edit_order')->name('edit_order');
         Route::put('order/{id}', 'OrderController@update')->name('update');
+        Route::delete('{id}', 'OrderController@destroy')->name('destroy');
     });
     Route::get('shop-info','ShopController@edit')->name('shop_info');
     Route::post('shop-info','ShopController@update')->name('update_shop_info');

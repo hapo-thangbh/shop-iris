@@ -10854,6 +10854,7 @@ body,
   .main-footer,
   .main-footer:before,
   .main-header,
+  .sidebar-open .main-header,
   .main-header:before {
     margin-left: 0;
   }

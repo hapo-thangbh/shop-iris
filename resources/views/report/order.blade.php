@@ -141,6 +141,7 @@
                             <a target="_blank" class="mt-2 fa fa-print text-dark pl-2" aria-hidden="true" href="{{ route('print_order', $order->id) }}"></a>
                             <i class="mt-2 mr-2 fas fa-pen pl-2 cursor-pointer" aria-hidden="true"  onclick="getInfoOrder({{ $order->id }})"></i>
                             <a class="mt-2 fas fa-plus text-dark pl-2" aria-hidden="true" href="{{ route('product.export_for_customer', $order->customer->id) }}"></a>
+                            <i class="mt-2 mr-2 fas fa-times pl-2 cursor-pointer js-remove-order" style="color: red" aria-hidden="true" data-url="{{ route('order.destroy', $order->id) }}"></i>
                         </div>
                     </div>
                 </div>
@@ -476,5 +477,17 @@
             $('input[name=checkPrint]').val(1);
             $('#formSubmit').submit();
         }
+        $(document).on('click', '.js-remove-order', function () {
+            if(confirm('Bạn muốn xóa order này ?')) {
+                let url = $(this).data('url');
+                $.ajax({
+                    url: url,
+                    method: 'DELETE',
+                    success: function() {
+                        location.reload();
+                    }
+                })
+            }
+        })
     </script>
 @endsection
