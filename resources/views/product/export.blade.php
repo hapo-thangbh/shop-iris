@@ -187,7 +187,7 @@
                             </td>
                             <td id="nameProduct0"></td>
                             <td class="text-center">
-                                <input type="number" min="0" onkeyup="setProduct(0)" class="form-control text-center" name="product[0][number]" id="" value="1">
+                                <input type="number" min="0" onchange="setProduct(0)" class="form-control text-center" name="product[0][number]" id="" value="1">
                             </td>
                             <td class="text-center" id="price0">
                             </td>
@@ -325,7 +325,7 @@
                 </td>
                 <td id="nameProduct${stt}"></td>
                 <td class="text-center">
-                    <input type="number" min="0" onkeyup="setProduct(${stt})" class="form-control text-center" name="product[${stt}][number]" id="" value="1">
+                    <input type="number" min="0" onchange="setProduct(${stt})" class="form-control text-center" name="product[${stt}][number]" id="" value="1">
                 </td>
                 <td class="text-center" id="price${stt}">
                 </td>
